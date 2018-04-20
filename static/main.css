@@ -1,0 +1,93 @@
+#station-labels {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.station {
+	width: 2em;
+	height: 2em;
+	
+	border-radius: 100%;
+	margin: 0.3em;
+	background: black;
+	color: white;
+	border: 2px solid transparent;
+
+	line-height: 2em;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+
+	cursor: pointer;
+	position: relative;
+	box-sizing: content-box;
+	transition: border-color 0.4s ease-in-out;
+}
+
+.station:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	transition: all 0.4s ease-in-out;
+	border-radius: 100%;
+}
+
+.station:hover {
+	opacity: 0.8;
+	border-color: lightgrey;
+}
+
+.station:hover:after {
+	transform: scale(1.5);
+	border: 2px solid black;
+}
+
+.station.selected {
+	border-color: white;
+}
+
+.station.selected:after {
+	transform: scale(1.3);
+	border: 2px solid black;
+}
+
+/* Colors taken from https://i.pinimg.com/736x/a0/47/f3/a047f3e3b6063580970bad1e80ef4a59--subway-signs-subway-art.jpg */
+.station.black {
+	background: black;
+}
+.station.orange {
+	background: #FB823C;
+}
+.station.blue {
+	background: #005EA6;
+}
+.station.lime {
+	background: #88C657;
+}
+.station.brown {
+	background: #B36D26;
+}
+.station.lightgrey {
+	background: #949599;
+}
+.station.darkgrey {
+	background: #6D6E72;
+}
+.station.yellow {
+	background: #FBD445;
+}
+.station.teal {
+	background: #00AFD8;
+}
+.station.red {
+	background: #F63742;
+}
+.station.green {
+	background: #00A95B;
+}
+.station.purple {
+	background: #A94395;
+}

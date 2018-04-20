@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    {% block styles %}{% endblock %}
+  
+    {# we need jquery to send post requests. for some reason d3-fetch wasn't behaving, at least in chrome #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+  </head>
+  <body>
+    {% block nav %}{% endblock %}
+
+  	{% block content %}{% endblock %}
+
+  	{% block scripts %}{% endblock %}
+  </body>
+</html>

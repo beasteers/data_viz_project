@@ -1,0 +1,23 @@
+{% extends 'base.j2' %}
+
+
+{% block content %}
+	<div id="grid">
+		<div id="station-labels"></div>
+	</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    var stations = {{ stations if stations else []|tojson }};
+	</script>
+	
+	<script src="{{ url_for('static', filename='main.js') }}"></script>
+	<script>
+    if(stations.length){
+      console.log(stations);
+      drawStationLabels(stations); 
+    }
+  </script>
+{% endblock %}
