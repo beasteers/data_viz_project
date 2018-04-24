@@ -7,8 +7,26 @@ app = Flask(__name__)
 
 
 
+
+
+
+
+
+@app.route('/')
+def index():
+    return render_template('index.j2')
+
+
+
+if __name__ == '__main__':
+	app.run(debug=True, port=5001)
+
+
+
+'''
+
 # Colors from https://i.pinimg.com/736x/a0/47/f3/a047f3e3b6063580970bad1e80ef4a59--subway-signs-subway-art.jpg
-stations = pd.DataFrame([
+subway_lines = pd.DataFrame([
 	('A', 'blue'),
 	('B', 'orange'),
 	('C', 'blue'),
@@ -44,21 +62,6 @@ stations = pd.DataFrame([
 	('7', 'purple'),
 	('8', 'black'),
 	('9', 'black'),
-], columns=['station', 'color'])
+], columns=['line', 'color'])
 
-
-
-
-
-
-
-
-
-
-@app.route('/')
-def index():
-    return render_template('index.j2', stations=stations.to_dict(orient='records'))
-
-
-if __name__ == '__main__':
-	app.run(debug=True, port=5001)
+'''

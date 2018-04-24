@@ -2,22 +2,23 @@
 
 
 {% block content %}
-	<div id="grid">
-		<div id="station-labels"></div>
+	<div id="vis">
+		<div id="subway-line-labels"></div>
+		<div id="line-details">
+			<h3 class="title">Please select a MTA line</h3>
+			<p class="description"></p>
+		</div>
+		<div id="chart"></div>
 	</div>
 {% endblock %}
 
 
-{% block scripts %}
-<script>
-    var stations = {{ stations if stations else []|tojson }};
-	</script>
-	
+{% block scripts %}	
 	<script src="{{ url_for('static', filename='main.js') }}"></script>
 	<script>
-    if(stations.length){
-      console.log(stations);
-      drawStationLabels(stations); 
-    }
+    d3.csv("{{ url_for('static', filename='data/GTFS_nyc_Subway/routes.txt') }}", function(data){
+    	console.log(data);
+    	drawSubwayLabels(data); 
+    })
   </script>
 {% endblock %}
