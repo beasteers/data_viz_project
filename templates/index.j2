@@ -14,11 +14,30 @@
 
 
 {% block scripts %}	
+	<script>
+		var map_geojson = {{ map_geojson|tojson }};
+	</script>
+
+
 	<script src="{{ url_for('static', filename='main.js') }}"></script>
 	<script>
+	// get the label data for each line
     d3.csv("{{ url_for('static', filename='data/GTFS_nyc_Subway/routes.txt') }}", function(data){
     	console.log(data);
     	drawSubwayLabels(data); 
-    })
+    });
+
+    // test getting the stop time data
+    d3.json("/data/stop-times/GS", function(data){
+    	console.log(data);
+    	// drawStationTSDiagram(data);
+    });
+
+    // draw the map
+    // if(map_geojson) {
+    // 	console.log(map_geojson);
+    // 	drawMap(map_geojson);
+    // }
+
   </script>
 {% endblock %}

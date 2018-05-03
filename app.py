@@ -7,6 +7,32 @@ app = Flask(__name__)
 
 
 
+def load_map_geojson():
+	# load map data
+	map_data = pd.read_csv('static/data/GTFS_nyc_Subway/shapes.txt').set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
+
+	# convert to geojson
+	features = map_data.groupby(level=0).apply(lambda x: dict(
+		type='Feature',
+		properties={},
+		geometry=dict(
+			type='LineString',
+			coordinates=x[['shape_pt_lon', 'shape_pt_lat']].values.tolist()
+		)
+	)).values.tolist()
+
+	return dict(
+		type='geojson',
+		features=features
+	)
+
+def load_stop_times():
+	# load stop data
+	return pd.read_csv('static/data/stops_and_times.csv').set_index('train') # , 'arrival_time'
+
+
+map_geojson = load_map_geojson()
+stop_times = load_stop_times()
 
 
 
@@ -14,8 +40,16 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.j2')
+    return render_template('index.j2', map_geojson=map_geojson)
 
+
+@app.route('/data/stop-times/<line>')
+def get_stop_time_data(line):
+	try: # get times for a specific line
+		data = stop_times.loc[line].to_dict(orient='records')
+	except KeyError: # if it doesn't exist, return empty list
+		data = []
+	return jsonify(data)
 
 
 if __name__ == '__main__':

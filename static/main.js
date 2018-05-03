@@ -1,4 +1,4 @@
-ts_svg = d3.select('#chart').append('svg');
+// ts_svg = d3.select('#chart').append('svg');
 
 function drawSubwayLabels(subway_lines) {
 	var subway_lines = d3.select('#subway-line-labels').selectAll('.subway-line').data(subway_lines);
@@ -26,10 +26,59 @@ function drawSubwayLabels(subway_lines) {
 			details.select('.description').text(d.route_desc);
 
 			// draw graph
-			renderStationTSDiagram(d);
+			drawStationTSDiagram(d);
 		});
 }
 
-function renderStationTSDiagram(data) {
+function drawStationTSDiagram(data) {
 	console.log(data);
+	var width = 700,
+	    height = 580,
+	    mapRatioAdjuster = 85,
+	    scale = width * (width / height + mapRatioAdjuster),//25,
+	    nyc_center = [-74, 40.7];
+
+	var svg = d3.select('#chart').append('svg')
+	  .attr('viewBox', `0 0 ${width} ${height}`)
+	  .attr('preserveAspectRatio', 'xMidYMid meet');
+
+	
+
+
+}
+
+function drawMap(geojson) {
+	// http://codewritingcow.com/d3-js/maps/americas/united-states/new-york/new-york-city/
+	var width = 700,
+	    height = 580,
+	    mapRatioAdjuster = 85,
+	    scale = width * (width / height + mapRatioAdjuster),//25,
+	    nyc_center = [-74, 40.7];
+
+	var svg = d3.select('#chart')
+	  .append('svg')
+	  .attr('width', width)
+	  .attr('height', height);
+
+	var g = svg.append('g');
+
+    // Create the geographic projection
+    var projection = d3.geoMercator()
+        .translate([width / 2, height / 2])
+        .scale(scale).center(nyc_center);
+
+
+	var geoPath = d3.geoPath()
+	    .projection(projection);
+
+	console.log(geojson.features);
+
+	g.selectAll('path')
+	  .data(geojson.features)
+	  .enter()
+	  .append('path')
+	  .attr('stroke', '#000')
+	  .attr('stroke-width', '3px')
+	  .attr('fill', 'none')
+	  .attr('d', geoPath);
 }
