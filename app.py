@@ -26,14 +26,43 @@ def load_map_geojson():
 		features=features
 	)
 
+
 def load_stop_times():
 	# load stop data
 	return pd.read_csv('static/data/stops_and_times.csv').set_index('train') # , 'arrival_time'
 
 
+def dist_from_coordinates(pt1, pt2):
+  R = 6371  # Earth radius in km
+
+  lon1, lat1 = pt1
+  lon2, lat2 = pt2
+
+  #conversion to radians
+  d_lat = np.radians(lat2-lat1)
+  d_lon = np.radians(lon2-lon1)
+
+  r_lat1 = np.radians(lat1)
+  r_lat2 = np.radians(lat2)
+
+  #haversine formula
+  a = np.sin(d_lat/2.) **2 + np.cos(r_lat1) * np.cos(r_lat2) * np.sin(d_lon/2.)**2
+
+  return 2 * R * np.arcsin(np.sqrt(a))
+
+
+def load_stations():
+	# load information about stations
+	df = pd.read_csv('static/data/GTFS_nyc_Subway/stops.txt')
+	df = df[df.location_type == 1]
+	# latlon = df[['stop_lon', 'stop_lat']].values
+	# df['distance'] = 
+	return df[['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']]
+
+
 map_geojson = load_map_geojson()
 stop_times = load_stop_times()
-
+stations = load_stations()
 
 
 
@@ -43,13 +72,47 @@ def index():
     return render_template('index.j2', map_geojson=map_geojson)
 
 
-@app.route('/data/stop-times/<line>')
-def get_stop_time_data(line):
+
+
+'''
+Get Data
+
+We need:
+
+stations: # for x axis
+	name
+	distance (along line)
+	(geographic position) # if we map
+
+stops_and_times: # for paths 
+	arrival time
+	departure time
+	station distance
+	(shape_id) # if we map
+	
+	
+
+'''
+
+
+@app.route('/data/stations/<line>')
+def get_station_data(line):
 	try: # get times for a specific line
 		data = stop_times.loc[line].to_dict(orient='records')
 	except KeyError: # if it doesn't exist, return empty list
 		data = []
 	return jsonify(data)
+
+@app.route('/data/trips/<line>')
+def get_trips_data(line):
+	try: # get times for a specific line
+		data = stop_times.loc[line].to_dict(orient='records')
+	except KeyError: # if it doesn't exist, return empty list
+		data = []
+	return jsonify(data)
+
+
+
 
 
 if __name__ == '__main__':
