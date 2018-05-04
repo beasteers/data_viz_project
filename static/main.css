@@ -7,11 +7,17 @@ h1,h2,h3,h4,h5,h6 {
 	font-weight: bold;
 }
 
-#vis {
+#header {
 	max-width: 1000px;
 	margin: 2em auto;
 }
 
+#vis svg {
+	/*background: #f6f6f6;*/
+	border: 2px solid #eee;
+	margin: 1em 0;
+	/*overflow: visible;*/
+}
 
 /* Details */
 

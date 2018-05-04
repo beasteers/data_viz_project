@@ -2,13 +2,23 @@
 
 
 {% block content %}
-	<div id="vis">
-		<div id="subway-line-labels"></div>
-		<div id="line-details">
-			<h3 class="title">Please select a MTA line</h3>
-			<p class="description"></p>
-		</div>
-		<div id="chart"></div>
+    <header id='header'>
+        <div id='subway-line-labels'></div>
+        <div id='line-details'>
+            <h3 class='title'>Please select a MTA line</h3>
+            <p class='description'></p>
+        </div>
+    </header>
+	<div id='vis'>
+		<div class='container-fluid'>
+            <div class='row'>
+                <div class='col' id='map'>
+                    <div class='wrap sticky-top'></div>
+                </div>
+                <div class='marey col d-none' id='marey1'></div>
+                <div class='marey col d-none' id='marey2'></div>
+            </div>
+        </div>
 	</div>
 {% endblock %}
 
