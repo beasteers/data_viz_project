@@ -48,6 +48,16 @@ h1,h2,h3,h4,h5,h6 {
 	opacity: 1;
 }
 
+
+/* Map */
+
+.map-stations:not(.selected) {
+	fill: lightgrey !important;
+}
+
+
+/* Marey Diagrams */
+
 #vis .col {
 	position: relative;
 }
@@ -71,6 +81,14 @@ h1,h2,h3,h4,h5,h6 {
 }
 #vis .col .close:hover:after {
 	transform: scale(1.6);
+}
+
+.station line {
+	stroke: lightgrey;
+}
+
+.station:last-child line {
+	stroke: black;
 }
 
 /* Subway icons */

@@ -31,26 +31,46 @@
 {% block scripts %}	
 	<script>
 		var map_geojson = {{ map_geojson|tojson }};
+        var stations = {{ stations|tojson }};
+        var subway_labels = {{ subway_labels|tojson }};
+        var line_colors = {{ line_colors|tojson }};
+        console.log(line_colors)
 	</script>
+
+    <script>
+        d3.selection.prototype.first = function() {
+          return d3.select(this[0][0]);
+        };
+        d3.selection.prototype.last = function() {
+          return d3.select(this[0][this.size() - 1]);
+        };
+        d3.selection.prototype.moveToFront = function() {  
+          return this.each(function(){
+            this.parentNode.appendChild(this);
+          });
+        };
+        d3.selection.prototype.moveToBack = function() {  
+            return this.each(function() { 
+                var firstChild = this.parentNode.firstChild; 
+                if (firstChild) { 
+                    this.parentNode.insertBefore(this, firstChild); 
+                } 
+            });
+        };
+    </script>
 
 	<script src="{{ url_for('static', filename='main.js') }}"></script>
 	<script>
 	// get the label data for each line
-    d3.csv("{{ url_for('static', filename='data/GTFS_nyc_Subway/routes.txt') }}", function(data){
-    	console.log(data);
-    	drawSubwayLabels(data); 
-    });
-
-    // test getting the stop time data
-    d3.json("/data/trips/GS", function(data){
-    	console.log(data);
-    	// drawStationTSDiagram(data);
-    });
+    if (subway_labels){
+    	console.log(subway_labels);
+    	drawSubwayLabels(subway_labels); 
+    };
 
     // draw the map
     if(map_geojson) {
-    	console.log(map_geojson);
-    	drawMap(map_geojson);
+    	console.log(map_geojson, stations);
+    	drawMap(map_geojson, stations);
     }
 
   </script>

@@ -3,12 +3,14 @@
 var width = 900, // determines the overall scale of everything. the width will always just fill the available space
     mapAspectRatio = 1, 
     mareyAspectRatio = 1 / 3, // width / height
-    margin = {top: 250, left: 60, right: 10, bottom: 10}, // defines how much space to give for axes
+    margin = {top: 250, left: 60, right: 120, bottom: 10}, // defines how much space to give for axes
     height = width / mareyAspectRatio;
 
 // create responsive svg for moray plots and map
 var svgMap = d3.select('#map .wrap').append('svg').call(responsiveSvg, {width: width, aspectRatio: mapAspectRatio}),
 	svgMareys = d3.selectAll('.marey').append('svg').call(responsiveSvg, {width: width, aspectRatio: mareyAspectRatio});
+
+svgMareys.append('g').attr('class', 'station-axis');
 
 var formatTime = d3.timeFormat("%H:%M:%S");
 var parseTime = d3.timeParse("%H:%M:%S");
@@ -112,24 +114,33 @@ function loadMareyDiagram(line, svg) {
 
 function drawMareyDiagram(stations, trips, svg) {
 	x.domain(d3.extent(stations, (d) => d.distance));
+	console.log(stations);
 
 	// come out of hiding
 	d3.select(svg.node().parentNode).classed('d-none', false);
 
+	// select map stations
+	updateMapColors();
+
 	// Create axis
+	var station = svg.select('.station-axis').selectAll('.station')
+		.data(stations, (d) => d.stop_id)
+		
+		
+	var station_enter = station.enter().append('g').attr('class', 'station')
+		.attr("transform", (d) => `translate(${x(d.distance)}, ${margin.top})`);
+		
 
-	var station = svg.selectAll('.station')
-		.data(stations)
-		.enter().append('g').attr('class', 'station')
-		.attr("transform", (d) => `translate(${x(d.distance)}, ${-margin.top+480})rotate(-30)`); // can't rotate at other angle currently
-
-	station.append("text")
+	station_enter.append("text")
 		.attr("x", -6)
 		.attr("dy", ".35em")
+		.attr("transform", 'translate(0,-20)rotate(-60)')
 		.text((d) => d.stop_name);
 
-	station.append("line")
-		.attr("x2", width);
+	station_enter.append("line")
+		.attr("y2", height - margin.top - margin.bottom);
+
+	station.exit().remove();
 
 	svg.append("g")
 	  .attr("class", "y left axis")
@@ -158,7 +169,7 @@ function drawMareyDiagram(stations, trips, svg) {
 
 
 
-function drawMap(geojson) {
+function drawMap(geojson, stations) {
 	// http://codewritingcow.com/d3-js/maps/americas/united-states/new-york/new-york-city/
 
 	// d3+leaflet https://bost.ocks.org/mike/leaflet/
@@ -185,6 +196,13 @@ function drawMap(geojson) {
 	  .attr('d', geoPath);
 
 	  // draw stations here
+	  svgMap.selectAll('.map-station')
+		.data(stations).enter()
+		.append("circle").attr('class', 'map-station')
+		.attr("cx", function (d) { return projection([d.stop_lon, d.stop_lat])[0]; })
+		.attr("cy", function (d) { return projection([d.stop_lon, d.stop_lat])[1]; })
+		.attr("r", "3px")
+		.call(setLineColor)
 }
 
 
@@ -199,6 +217,16 @@ function responsiveSvg(el, o){
 }
 
 
+function setLineColor(el, def) {
+	el.attr("fill", (d) => line_colors[d.train] ? '#' + line_colors[d.train] : (def || 'black'))
+}
+
+function updateMapColors(){
+	var route_ids = svgMareys.data().map((d) => d && d.route_id);
+	var map_stations = svgMap.selectAll('.map-station');
+	map_stations.filter((d) => !route_ids.includes(d.train)).attr('fill', 'lightgrey');
+	map_stations.filter((d) => route_ids.includes(d.train)).call(setLineColor);
+}
 
 
 function throttle(fn, restPeriod){ 

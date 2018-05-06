@@ -49,21 +49,26 @@ def dist_from_coordinates(pt1, pt2):
 
 def load_stations():
 	# load information about stations
-	df = pd.read_csv(data_file('stops.txt'))
-	df = df[df.location_type == 1]
-	return df[['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']].fillna('')
+	return pd.read_csv(data_file('stop_train.csv')).set_index('train')
+
+def load_subway_labels():
+	return pd.read_csv(data_file('routes.txt'))
 
 
 map_geojson = load_map_geojson()
 stop_times = load_stop_times()
 stations = load_stations()
+subway_labels = load_subway_labels()
+line_colors = subway_labels.set_index('route_id')['route_color'].fillna('black')
 
 
 
 
 @app.route('/')
 def index():
-    return render_template('index.j2', map_geojson=map_geojson)
+    return render_template('index.j2', 
+    		map_geojson=map_geojson, stations=stations.reset_index().to_dict(orient='records'), 
+    		subway_labels=subway_labels.to_dict(orient='records'), line_colors=line_colors.to_dict())
 
 
 
@@ -95,11 +100,17 @@ def get_station_data(line):
 	# 	data = stop_times.loc[line].to_dict(orient='records')
 	# except KeyError: # if it doesn't exist, return empty list
 	# 	data = []
-	df = stations
-	# filter for only stations on `line` and sort order
-	latlon = df[['stop_lon', 'stop_lat']].values
-	df['distance'] = [0] + [dist_from_coordinates(pt1, pt2) for pt1, pt2 in zip(latlon[1:], latlon[:-1])]
-	return jsonify(df.to_dict(orient='records'))
+	try: # get times for a specific line
+		df = stations.loc[line].sort_values('stop_id')
+		# filter for only stations on `line` and sort order
+		latlon = df[['stop_lon', 'stop_lat']].values
+		df['distance'] = [0] + [dist_from_coordinates(pt1, pt2) for pt1, pt2 in zip(latlon[1:], latlon[:-1])]
+		df['distance'] = df['distance'].cumsum()
+		data = df.to_dict(orient='records')
+	except KeyError: # if it doesn't exist, return empty list
+		data = []
+	
+	return jsonify(data)
 
 @app.route('/data/trips/<line>')
 def get_trips_data(line):
