@@ -48,12 +48,15 @@ var yAxis = d3.axisLeft()
 d3.selectAll('.marey').append('span').attr('class', 'close subway-line').html('&times;')
 	.on('click', function(d, i){ 
 		// close marey diagram and deselect the line icon
-		var station = d3.select(this.parentNode).classed('d-none', true).select('svg').datum();
+		var svg = d3.select(this.parentNode).classed('d-none', true).select('svg');
+		var station = svg.datum();
+		svg.datum(null);
 		d3.select('#subway-line-labels').selectAll('.subway-line')
 			.filter((d) => d.route_id == station.route_id)
 			.classed('selected', false);
 		// push svg to front of the line
 		mareys.push(mareys.splice(i,1)[0]);
+		updateMapColors();
 	});
 
 
@@ -223,9 +226,10 @@ function setLineColor(el, def) {
 
 function updateMapColors(){
 	var route_ids = svgMareys.data().map((d) => d && d.route_id);
+	var show_all = !route_ids.filter((d)=>d).length; // if no svgs are selected show all colors
 	var map_stations = svgMap.selectAll('.map-station');
-	map_stations.filter((d) => !route_ids.includes(d.train)).attr('fill', 'lightgrey');
-	map_stations.filter((d) => route_ids.includes(d.train)).call(setLineColor);
+	map_stations.filter((d) => !(route_ids.includes(d.train) || show_all)).attr('fill', 'lightgrey');
+	map_stations.filter((d) => route_ids.includes(d.train) || show_all).call(setLineColor);
 }
 
 
