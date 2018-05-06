@@ -123,7 +123,7 @@ function drawMareyDiagram(stations, trips, svg) {
 	var station = svg.selectAll('.station')
 		.data(stations)
 		.enter().append('g').attr('class', 'station')
-		.attr("transform", (d) => `rotate(-90)translate(${-margin.top+10},${x(d.distance)})`); // can't rotate at other angle currently
+		.attr("transform", (d) => `translate(${x(d.distance)}, ${-margin.top+480})rotate(-30)`); // can't rotate at other angle currently
 
 	station.append("text")
 		.attr("x", -6)
