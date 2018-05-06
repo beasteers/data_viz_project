@@ -77,12 +77,10 @@ function drawSubwayLabels(subway_lines) {
 			var svg = oldestMarey();
 			var station = svg.datum() || {};
 
+			// toggle selected
 			d3.select('#subway-line-labels').selectAll('.subway-line')
 				.filter((d) => d.route_id == station.route_id)
 				.classed('selected', false);
-
-			// toggle selected
-			d3.select(this.parentNode).selectAll('.subway-line').classed('selected', false);
 			d3.select(this).classed('selected', true);
 
 			// display line details
