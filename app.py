@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from flask import Flask
@@ -6,10 +7,12 @@ from flask import request, render_template, jsonify, make_response
 app = Flask(__name__)
 
 
+data_dir = 'static/data/GTFS_nyc_Subway/'
+data_file = lambda f: os.path.join(data_dir, f)
 
 def load_map_geojson():
 	# load map data
-	map_data = pd.read_csv('static/data/GTFS_nyc_Subway/shapes.txt').set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
+	map_data = pd.read_csv(data_file('shapes.txt')).set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
 
 	# convert to geojson
 	features = map_data.groupby(level=0).apply(lambda x: dict(
@@ -29,7 +32,7 @@ def load_map_geojson():
 
 def load_stop_times():
 	# load stop data
-	return pd.read_csv('static/data/stops_and_times.csv').set_index('train') # , 'arrival_time'
+	return pd.read_csv(data_file('stops_and_times.csv')).set_index('train') # , 'arrival_time'
 
 
 def dist_from_coordinates(pt1, pt2):
@@ -46,7 +49,7 @@ def dist_from_coordinates(pt1, pt2):
 
 def load_stations():
 	# load information about stations
-	df = pd.read_csv('static/data/GTFS_nyc_Subway/stops.txt')
+	df = pd.read_csv(data_file('stops.txt'))
 	df = df[df.location_type == 1]
 	return df[['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']].fillna('')
 
