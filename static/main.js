@@ -1,20 +1,27 @@
 // ts_svg = d3.select('#chart').append('svg');
 
-var width = 600, // determines the overall scale. it will just fill the available space
+var width = 900, // determines the overall scale of everything. the width will always just fill the available space
     mapAspectRatio = 1, 
-    mareyAspectRatio = 1 / 10, // width / height
+    mareyAspectRatio = 1 / 3, // width / height
     margin = {top: 250, left: 60, right: 10, bottom: 10}, // defines how much space to give for axes
     height = width / mareyAspectRatio;
 
 // create responsive svg for moray plots and map
 var svgMap = d3.select('#map .wrap').append('svg').call(responsiveSvg, {width: width, aspectRatio: mapAspectRatio}),
-	svgMarey1 = d3.select('#marey1').append('svg').call(responsiveSvg, {width: width, aspectRatio: mareyAspectRatio}),
-	svgMarey2 = d3.select('#marey2').append('svg').call(responsiveSvg, {width: width, aspectRatio: mareyAspectRatio});
+	svgMareys = d3.selectAll('.marey').append('svg').call(responsiveSvg, {width: width, aspectRatio: mareyAspectRatio});
 
 var formatTime = d3.timeFormat("%H:%M:%S");
 var parseTime = d3.timeParse("%H:%M:%S");
 
 
+var mareys = svgMareys.nodes();
+function oldestMarey(){
+	/* keep track of the order of marey diagrams 
+		mareys is a list of svg nodes ordered by how recent it was used, in descending order
+		the last element is next */
+	mareys.unshift(mareys.pop()); // move from end to front
+	return d3.select(mareys[0]);
+}
 
 // Marey Plots
 
@@ -35,16 +42,27 @@ var yAxis = d3.axisLeft()
     .ticks(24)
     .tickFormat(formatTime);
 
+// create a close button for marey diagrams
+d3.selectAll('.marey').append('span').attr('class', 'close subway-line').html('&times;')
+	.on('click', function(d, i){ 
+		// close marey diagram and deselect the line icon
+		var station = d3.select(this.parentNode).classed('d-none', true).select('svg').datum();
+		d3.select('#subway-line-labels').selectAll('.subway-line')
+			.filter((d) => d.route_id == station.route_id)
+			.classed('selected', false);
+		// push svg to front of the line
+		mareys.push(mareys.splice(i,1)[0]);
+	});
 
 
-// cipping path for lines so they don't show outside of the plot. idk I found it in the marey example
-svgMarey1.append("defs").append("clipPath")
-    .attr("id", "clip")
-  .append("rect")
-  	.attr("x", -margin.left)
-    .attr("y", -margin.top)
-    .attr("width", width - margin.left - margin.right)
-    .attr("height", height - margin.top - margin.bottom);
+// // cipping path for lines so they don't show outside of the plot. idk I found it in the marey example
+// svgMareys.append("defs").append("clipPath")
+//     .attr("id", "clip")
+//   .append("rect")
+//   	.attr("x", -margin.left)
+//     .attr("y", -margin.top)
+//     .attr("width", width - margin.left - margin.right)
+//     .attr("height", height - margin.top - margin.bottom);
 
 
 function drawSubwayLabels(subway_lines) {
@@ -56,6 +74,13 @@ function drawSubwayLabels(subway_lines) {
 		.style('color', (d) => d.route_text_color ? '#'+d.route_text_color : null)
 		.text(d => d.route_id)
 		.on('click', function(d) {
+			var svg = oldestMarey();
+			var station = svg.datum() || {};
+
+			d3.select('#subway-line-labels').selectAll('.subway-line')
+				.filter((d) => d.route_id == station.route_id)
+				.classed('selected', false);
+
 			// toggle selected
 			d3.select(this.parentNode).selectAll('.subway-line').classed('selected', false);
 			d3.select(this).classed('selected', true);
@@ -73,7 +98,7 @@ function drawSubwayLabels(subway_lines) {
 			details.select('.description').text(d.route_desc);
 
 			// draw graph
-			loadMareyDiagram(d, svgMarey1);
+			loadMareyDiagram(d, svg.datum(d));
 		});
 }
 
@@ -89,8 +114,9 @@ function loadMareyDiagram(line, svg) {
 
 function drawMareyDiagram(stations, trips, svg) {
 	x.domain(d3.extent(stations, (d) => d.distance));
-	
-	d3.select(svg.node().parentNode).classed('d-none', false)
+
+	// come out of hiding
+	d3.select(svg.node().parentNode).classed('d-none', false);
 
 	// Create axis
 
@@ -128,6 +154,8 @@ function drawMareyDiagram(stations, trips, svg) {
 	// .enter().append("circle")
 	//   .attr("transform", function(d) { return "translate(" + x(d.time) + "," + y(d.station.distance) + ")"; })
 	//   .attr("r", 2);
+
+	// draw trip paths here
 }
 
 
@@ -157,6 +185,8 @@ function drawMap(geojson) {
 	  .attr('stroke-width', '1px')
 	  .attr('fill', 'none')
 	  .attr('d', geoPath);
+
+	  // draw stations here
 }
 
 

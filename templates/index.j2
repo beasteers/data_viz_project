@@ -12,6 +12,11 @@
 	<div id='vis'>
 		<div class='container-fluid'>
             <div class='row'>
+                <div class='col'></div>
+                <div class='station-desc col d-none'></div>
+                <div class='station-desc col d-none'></div>
+            </div>
+            <div class='row'>
                 <div class='col' id='map'>
                     <div class='wrap sticky-top'></div>
                 </div>
@@ -27,7 +32,6 @@
 	<script>
 		var map_geojson = {{ map_geojson|tojson }};
 	</script>
-
 
 	<script src="{{ url_for('static', filename='main.js') }}"></script>
 	<script>
