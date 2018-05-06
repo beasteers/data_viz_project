@@ -1,4 +1,5 @@
 import os
+import json
 import numpy as np
 import pandas as pd
 from flask import Flask
@@ -49,7 +50,8 @@ def dist_from_coordinates(pt1, pt2):
 
 def load_stations():
 	# load information about stations
-	return pd.read_csv(data_file('stop_train.csv')).set_index('train')
+	df = pd.read_pickle(data_file('stop_train.pkl')).set_index('train')
+	return df
 
 def load_subway_labels():
 	return pd.read_csv(data_file('routes.txt'))
