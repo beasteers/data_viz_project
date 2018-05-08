@@ -67,11 +67,11 @@ iconBar.append('span').attr('class', 'subway-line marey-line');
 iconBar.append('span').attr('class', 'ctl-button subway-line')
 	.on('click', function(){
 		var that = d3.select(this).closest('.col').node(); // select the parent column
-		
 		// select columns other than this one and that have data attached and toggle displaying them
 		d3.selectAll('#vis .panels .col')
 			.filter(function(){ 
-				return this != that && d3.select(this).select('svg').datum(); 
+				var el = d3.select(this);
+				return el.attr('id') == 'map' || (this != that && el.select('svg').datum()); 
 			})
 			.classed('d-none', function (d, i) { return !d3.select(this).classed('d-none'); });
 
