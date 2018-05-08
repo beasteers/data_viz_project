@@ -164,12 +164,8 @@ function drawSubwayLabels(subway_lines) {
 }
 
 function loadMareyDiagram(line, svg) {
-	d3.queue()
-		.defer(d3.json, `/data/stations/${line.route_id}`)
-		.defer(d3.json, `/data/trips/${line.route_id}`)
-		.await(function(err, stations, trips){
-			// console.log(stations, trips);
-			drawMareyDiagram(stations, trips, svg);
+		d3.json(`/data/trips/${line.route_id}`, function(err, d){
+			drawMareyDiagram(d.stations, d.trips, svg);
 		});
 }
 

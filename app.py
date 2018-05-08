@@ -73,7 +73,13 @@ def get_station_geojson(stations):
 	)
 
 def get_distances_for_line(line):
-	pass
+	# filter for only stations on `line` and sort order
+	df = stations.loc[line].copy()
+	latlon = df[['stop_lon', 'stop_lat']].values
+	df['distance'] = pd.Series([0] + [dist_from_coordinates(pt1, pt2) for pt1, pt2 in zip(latlon[1:], latlon[:-1])], index=df.index)
+	df['distance'] = df['distance'].cumsum()
+	return df
+
 
 
 map_geojson = load_map_geojson() # loads line data for mapping
@@ -117,39 +123,25 @@ stops_and_times: # for paths
 
 
 
-@app.route('/data/stations/<line>')
-def get_station_data(line):
-	# try: # get times for a specific line
-	# 	data = stop_times.loc[line].to_dict(orient='records')
-	# except KeyError: # if it doesn't exist, return empty list
-	# 	data = []
-	try: # get times for a specific line
-		df = stations.loc[line]
-		# filter for only stations on `line` and sort order
-		latlon = df[['stop_lon', 'stop_lat']].values
-		df['distance'] = [0] + [dist_from_coordinates(pt1, pt2) for pt1, pt2 in zip(latlon[1:], latlon[:-1])]
-		df['distance'] = df['distance'].cumsum()
-		data = df.to_dict(orient='records')
-	except KeyError: # if it doesn't exist, return empty list
-		data = []
-	
-	return jsonify(data)
-
 @app.route('/data/trips/<line>')
 def get_trips_data(line):
-	try: # get times for a specific line
+	station_data = get_distances_for_line(line)
+	distances = station_data[['stop_name', 'distance']]
+	data = pd.merge(stop_times.loc[line], distances, on='stop_name')
+	data = data.groupby('trip_id').apply(lambda df: df.to_dict(orient='records'))
+	
+	return jsonify({
+		'stations': station_data.to_dict(orient='records'),
+		'trips': data.tolist()
+	})
 
-		data = stop_times.loc[line].groupby('trip_id').apply(lambda x: x.to_dict(orient='records')).tolist()
-	except KeyError: # if it doesn't exist, return empty list
-		data = []
-	return jsonify(data)
 
 
 
 
 
 if __name__ == '__main__':
-	app.run(debug=True, port=5001)
+	app.run(debug=True, port=5001, threaded=True)
 
 
 
