@@ -8,7 +8,7 @@ from flask import request, render_template, jsonify, make_response
 app = Flask(__name__)
 
 
-data_dir = 'static/data/GTFS_nyc_Subway/'
+data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/data/GTFS_nyc_Subway/')
 data_file = lambda f: os.path.join(data_dir, f)
 
 def load_map_geojson():
