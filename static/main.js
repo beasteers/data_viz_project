@@ -276,16 +276,20 @@ function drawMareyDiagram(stations, trips, svg) {
 	// train.append("path")
 	//   .attr("d", function(d) { return line(d.stops); });
 
-	draw lines
+	//draw lines
 	var line = d3.line()
-		.x(function(d,i) {return x(d.distance);})
-		.y(function(d) {return y(d.time);})
+	.curve(d3.curveBasis)
+		.x(function(d) {
+			console.log(1, d);
+			return x(d.distance);})
+		.y(function(d) {return y(parseTime(d.departure_time));})
 	
 	svg.append("g")
-		.selectAll(".trip").data(trips).enter().append("path")
+		.selectAll(".trip").data(trips.splice(0, 10)).enter().append("path")
 		.attr("class", "trip")
 		.attr("d", line)
 		.attr("stroke", "white")
+
 
 	// draw trip paths here
 	var route_id = svg.datum().route_id;
