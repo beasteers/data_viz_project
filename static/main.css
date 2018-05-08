@@ -120,9 +120,9 @@ h1,h2,h3,h4,h5,h6 {
 	transition: stroke 0.2s ease-in-out;
 }
 
-.station:first-child text,
-.station:last-child text,
-.station:nth-child(5n) text,
+.station:first-child .station-label,
+.station:last-child .station-label,
+.station:nth-child(5n) .station-label,
 .station:hover .station-label {
 	opacity: 1;
 }
@@ -138,6 +138,9 @@ h1,h2,h3,h4,h5,h6 {
 	stroke-width: 2px;
 }
 
+.y.axis text {
+	font-size: 1.3em;
+}
 
 
 .station.hover text {
@@ -147,6 +150,7 @@ h1,h2,h3,h4,h5,h6 {
 .station.hover line {
 	stroke: lightgrey;
 }
+
 
 /* Subway icons */
 
