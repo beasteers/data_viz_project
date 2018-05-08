@@ -1,375 +1,369 @@
-,stop_name,train
-0,1 Av,1
-1,103 St,6
-2,103 St - Corona Plaza,1
-3,104 St,2
-4,110 St,2
-5,111 St,3
-6,116 St,8
-7,116 St - Columbia University,1
-8,121 St,1
-9,125 St,12
-10,135 St,6
-11,137 St - City College,1
-12,138 St - Grand Concourse,3
-13,14 St,9
-14,14 St - Union Sq,8
-15,145 St,7
-16,149 St - Grand Concourse,3
-17,15 St - Prospect Park,2
-18,155 St,4
-19,157 St,1
-20,161 St - Yankee Stadium,3
-21,163 St - Amsterdam Av,2
-22,167 St,3
-23,168 St,2
-24,168 St - Washington Hts,1
-25,169 St,1
-26,170 St,3
-27,174 St,2
-28,174-175 Sts,2
-29,175 St,1
-30,176 St,1
-31,18 Av,3
-32,18 St,3
-33,181 St,2
-34,182-183 Sts,2
-35,183 St,1
-36,190 St,1
-37,191 St,1
-38,2 Av,2
-39,20 Av,2
-40,207 St,1
-41,21 St,1
-42,21 St - Queensbridge,1
-43,215 St,1
-44,219 St,2
-45,225 St,2
-46,23 St,14
-47,231 St,1
-48,233 St,2
-49,238 St,1
-50,25 Av,1
-51,25 St,3
-52,28 St,9
-53,3 Av,1
-54,3 Av - 138 St,1
-55,3 Av - 149 St,2
-56,30 Av,2
-57,33 St,3
-58,34 St - 11 Av,1
-59,34 St - Herald Sq,8
-60,34 St - Penn Station,7
-61,36 Av,2
-62,36 St,6
-63,39 Av,2
-64,4 Av,2
-65,40 St,1
-66,42 St - Bryant Pk,4
-67,42 St - Port Authority Bus Terminal,3
-68,45 St,2
-69,46 St,4
-70,47-50 Sts - Rockefeller Ctr,4
-71,49 St,4
-72,5 Av,1
-73,5 Av/53 St,2
-74,5 Av/59 St,3
-75,50 St,7
-76,51 St,2
-77,52 St,1
-78,53 St,2
-79,55 St,1
-80,57 St,1
-81,57 St - 7 Av,4
-82,59 St,6
-83,59 St - Columbus Circle,7
-84,6 Av,1
-85,62 St,1
-86,63 Dr - Rego Park,3
-87,65 St,3
-88,66 St - Lincoln Center,3
-89,67 Av,3
-90,68 St - Hunter College,2
-91,69 St,1
-92,7 Av,7
-93,71 St,1
-94,72 St,10
-95,74 St - Broadway,1
-96,75 Av,2
-97,75 St,1
-98,77 St,3
-99,79 St,4
-100,8 Av,2
-101,8 St - NYU,4
-102,80 St,1
-103,81 St - Museum of Natural History,3
-104,82 St - Jackson Hts,1
-105,85 St - Forest Pkwy,1
-106,86 St,15
-107,88 St,1
-108,9 Av,1
-109,9 St,3
-110,90 St - Elmhurst Av,1
-111,96 St,12
-112,Alabama Av,1
-113,Allerton Av,2
-114,Annadale,1
-115,Aqueduct - N Conduit Av,1
-116,Aqueduct Racetrack,1
-117,Arthur Kill,1
-118,Astor Pl,2
-119,Astoria - Ditmars Blvd,2
-120,Astoria Blvd,2
-121,Atlantic Av,1
-122,Atlantic Av - Barclays Ctr,9
-123,Avenue H,1
-124,Avenue I,1
-125,Avenue J,1
-126,Avenue M,1
-127,Avenue N,1
-128,Avenue P,1
-129,Avenue U,3
-130,Avenue X,1
-131,Bay 50 St,1
-132,Bay Pkwy,3
-133,Bay Ridge - 95 St,1
-134,Bay Ridge Av,1
-135,Bay Terrace,1
-136,Baychester Av,1
-137,Beach 105 St,2
-138,Beach 25 St,1
-139,Beach 36 St,1
-140,Beach 44 St,1
-141,Beach 60 St,1
-142,Beach 67 St,1
-143,Beach 90 St,2
-144,Beach 98 St,2
-145,Bedford - Nostrand Avs,1
-146,Bedford Av,1
-147,Bedford Park Blvd,2
-148,Bedford Park Blvd - Lehman College,1
-149,Bergen St,5
-150,Beverley Rd,1
-151,Beverly Rd,2
-152,Bleecker St,2
-153,Borough Hall,5
-154,Botanic Garden,1
-155,Bowery,2
-156,Bowling Green,3
-157,Briarwood - Van Wyck Blvd,2
-158,Brighton Beach,2
-159,Broad Channel,2
-160,Broad St,1
-161,Broadway,3
-162,Broadway Jct,5
-163,Broadway-Lafayette St,4
-164,Bronx Park East,2
-165,Brook Av,1
-166,Brooklyn Bridge - City Hall,4
-167,Buhre Av,1
-168,Burke Av,2
-169,Burnside Av,1
-170,Bushwick Av - Aberdeen St,1
-171,Canal St,15
-172,Canarsie - Rockaway Pkwy,1
-173,Carroll St,2
-174,Castle Hill Av,1
-175,Cathedral Pkwy,1
-176,Cathedral Pkwy (110 St),3
-177,Central Park North (110 St),3
-178,Chambers St,8
-179,Chauncey St,2
-180,Christopher St - Sheridan Sq,3
-181,Church Av,6
-182,City Hall,3
-183,Clark St,2
-184,Classon Av,1
-185,Cleveland St,1
-186,Clifton,1
-187,Clinton - Washington Avs,3
-188,Coney Island - Stillwell Av,4
-189,Cortelyou Rd,1
-190,Cortlandt St,5
-191,Court Sq,4
-192,Court St,2
-193,Crescent St,1
-194,Crown Hts - Utica Av,4
-195,Cypress Av,1
-196,Cypress Hills,1
-197,DeKalb Av,6
-198,Delancey St,1
-199,Ditmas Av,1
-200,Dongan Hills,1
-201,Dyckman St,2
-202,E 105 St,1
-203,E 143 St - St Mary's St,1
-204,E 149 St,1
-205,E 180 St,2
-206,East Broadway,1
-207,Eastchester - Dyre Av,1
-208,Eastern Pkwy - Brooklyn Museum,3
-209,Elder Av,1
-210,Elmhurst Av,3
-211,Eltingville,1
-212,Essex St,2
-213,Euclid Av,2
-214,Far Rockaway - Mott Av,1
-215,Flatbush Av - Brooklyn College,2
-216,Flushing - Main St,1
-217,Flushing Av,3
-218,Fordham Rd,3
-219,Forest Av,1
-220,Forest Hills - 71 Av,4
-221,Fort Hamilton Pkwy,4
-222,Franklin Av,7
-223,Franklin St,3
-224,Freeman St,2
-225,Fresh Pond Rd,1
-226,Fulton St,9
-227,Gates Av,2
-228,Graham Av,1
-229,Grand Army Plaza,3
-230,Grand Av - Newtown,3
-231,Grand Central - 42 St,6
-232,Grand St,3
-233,Grant Av,1
-234,Grant City,1
-235,Grasmere,1
-236,Great Kills,1
-237,Greenpoint Av,1
-238,Gun Hill Rd,3
-239,Halsey St,3
-240,Harlem - 148 St,1
-241,Hewes St,2
-242,High St,2
-243,Houston St,3
-244,Howard Beach - JFK Airport,1
-245,Hoyt - Schermerhorn Sts,3
-246,Hoyt St,2
-247,Huguenot,1
-248,Hunters Point Av,1
-249,Hunts Point Av,1
-250,Intervale Av,2
-251,Inwood - 207 St,1
-252,Jackson Av,2
-253,Jackson Hts - Roosevelt Av,4
-254,Jamaica - 179 St,2
-255,Jamaica - Van Wyck,1
-256,Jamaica Center - Parsons/Archer,2
-257,Jay St - MetroTech,5
-258,Jefferson Av,1
-259,Jefferson St,1
-260,Junction Blvd,1
-261,Junius St,4
-262,Kew Gardens - Union Tpke,2
-263,Kings Hwy,4
-264,Kingsbridge Rd,3
-265,Kingston - Throop Avs,2
-266,Kingston Av,4
-267,Kosciuszko St,2
-268,Lafayette Av,2
-269,Lexington Av/53 St,2
-270,Lexington Av/59 St,3
-271,Lexington Av/63 St,4
-272,Liberty Av,2
-273,Livonia Av,1
-274,Longwood Av,1
-275,Lorimer St,3
-276,Marble Hill - 225 St,1
-277,Marcy Av,2
-278,Metropolitan Av,1
-279,Mets - Willets Point,1
-280,Middle Village - Metropolitan Av,1
-281,Middletown Rd,1
-282,Montrose Av,1
-283,Morgan Av,1
-284,Morris Park,1
-285,Morrison Av- Sound View,1
-286,Mosholu Pkwy,1
-287,Mt Eden Av,1
-288,Myrtle - Willoughby Avs,1
-289,Myrtle - Wyckoff Avs,2
-290,Myrtle Av,2
-291,Nassau Av,1
-292,Neck Rd,1
-293,Neptune Av,1
-294,Nereid Av,2
-295,Nevins St,4
-296,New Dorp,1
-297,New Lots Av,5
-298,New Utrecht Av,1
-299,Newkirk Av,2
-300,Newkirk Plaza,2
-301,Northern Blvd,3
-302,Norwood - 205 St,1
-303,Norwood Av,1
-304,Nostrand Av,6
-305,Oakwood Heights,1
-306,Ocean Pkwy,1
-307,Old Town,1
-308,Ozone Park - Lefferts Blvd,1
-309,Park Pl,3
-310,Parkchester,1
-311,Parkside Av,1
-312,Parsons Blvd,2
-313,Pelham Bay Park,1
-314,Pelham Pkwy,3
-315,Pennsylvania Av,4
-316,Pleasant Plains,1
-317,President St,2
-318,Prince St,4
-319,Prince's Bay,1
-320,Prospect Av,5
-321,Prospect Park,3
-322,Queens Plaza,3
-323,Queensboro Plaza,3
-324,Ralph Av,2
-325,Rector St,5
-326,Richmond Valley,1
-327,Rockaway Av,6
-328,Rockaway Blvd,1
-329,Rockaway Park - Beach 116 St,2
-330,Roosevelt Island,1
-331,Saratoga Av,4
-332,Seneca Av,1
-333,Sheepshead Bay,2
-334,Shepherd Av,2
-335,Simpson St,2
-336,Smith - 9 Sts,2
-337,South Ferry,2
-338,Spring St,5
-339,St George,1
-340,St Lawrence Av,1
-341,Stapleton,1
-342,Steinway St,3
-343,Sterling St,2
-344,Sutphin Blvd,1
-345,Sutphin Blvd - Archer Av - JFK Airport,2
-346,Sutter Av,1
-347,Sutter Av - Rutland Rd,4
-348,Times Sq - 42 St,10
-349,Tompkinsville,1
-350,Tottenville,1
-351,Tremont Av,2
-352,Union Sq - 14 St,1
-353,Union St,3
-354,Utica Av,2
-355,Van Cortlandt Park - 242 St,1
-356,Van Siclen Av,7
-357,Vernon Blvd - Jackson Av,1
-358,W 4 St,7
-359,W 8 St - NY Aquarium,2
-360,Wakefield - 241 St,2
-361,Wall St,5
-362,West Farms Sq - E Tremont Av,2
-363,Westchester Sq - E Tremont Av,1
-364,Whitehall St,3
-365,Whitlock Av,1
-366,Wilson Av,1
-367,Winthrop St,2
-368,Woodhaven Blvd,4
-369,Woodlawn,1
-370,Woodside - 61 St,1
-371,World Trade Center,1
-372,York St,1
-373,Zerega Av,1
+['L']
+"['1', '4', '6', 'A', 'B', 'C']"
+['7']
+['J']
+"['4', '6']"
+"['7', 'J']"
+"['2', '3', '4', '5', '6', 'A', 'B', 'C']"
+['1']
+['J']
+"['1', '2', '3', '4', '5', '6', 'A', 'B', 'C', 'D']"
+"['2', '3', '5', 'A', 'B', 'C']"
+['1']
+['4']
+"['1', '2', '3', '5', 'A', 'C', 'E', 'F', 'M']"
+"['4', '6', 'N', 'Q', 'R', 'W']"
+"['1', '3', 'A', 'B', 'C', 'D']"
+"['2', '4', '5']"
+"['F', 'G']"
+"['A', 'B', 'C', 'D']"
+['1']
+"['4', 'B', 'D']"
+"['A', 'C']"
+"['4', 'B', 'D']"
+"['A', 'C']"
+['1']
+['F']
+"['4', 'B', 'D']"
+"['2', '5']"
+"['B', 'D']"
+['A']
+['4']
+"['D', 'F', 'N']"
+"['1', '2', '5']"
+"['1', 'A']"
+"['B', 'D']"
+['4']
+['A']
+['1']
+['F']
+"['D', 'N']"
+['1']
+['G']
+['F']
+['1']
+['2']
+['2']
+"['1', '2', '4', '5', '6', 'A', 'C', 'E', 'F', 'M', 'N', 'Q', 'R', 'W']"
+['1']
+['2']
+['1']
+['D']
+"['D', 'N', 'R']"
+"['1', '2', '4', '5', '6', 'N', 'Q', 'R', 'W']"
+['L']
+['6']
+"['2', '5']"
+"['N', 'W']"
+"['4', '6', '7']"
+['7']
+"['B', 'D', 'F', 'M', 'N', 'Q', 'R', 'W']"
+"['1', '2', '3', '5', 'A', 'C', 'E']"
+"['N', 'W']"
+"['D', 'E', 'M', 'N', 'R', 'R']"
+"['N', 'W']"
+"['F', 'G']"
+['7']
+"['B', 'D', 'F', 'M']"
+"['A', 'C', 'E']"
+"['N', 'R']"
+"['7', 'E', 'M', 'R']"
+"['B', 'D', 'F', 'M']"
+"['N', 'Q', 'R', 'W']"
+['7']
+"['E', 'M']"
+"['N', 'R', 'W']"
+"['1', '2', '5', 'A', 'C', 'D', 'E']"
+"['4', '6']"
+['7']
+"['N', 'R']"
+['D']
+['F']
+"['N', 'Q', 'R', 'W']"
+"['4', '6', 'N', 'R']"
+"['1', '2', '5', 'A', 'B', 'C', 'D']"
+['L']
+['D']
+"['E', 'M', 'R']"
+"['E', 'M', 'R']"
+"['1', '2', '5']"
+"['E', 'M', 'R']"
+"['4', '6']"
+['7']
+"['B', 'B', 'D', 'E', 'F', 'G', 'Q']"
+['D']
+"['1', '2', '3', '5', 'A', 'B', 'C', 'Q']"
+['7']
+"['E', 'F']"
+['J']
+"['4', '6', 'R']"
+"['1', '2', '5', 'D']"
+"['L', 'N']"
+"['N', 'Q', 'R', 'W']"
+['A']
+"['A', 'B', 'C']"
+['7']
+['J']
+"['1', '2', '4', '5', '6', 'A', 'B', 'C', 'N', 'Q', 'R']"
+['A']
+['D']
+"['D', 'N', 'R']"
+['7']
+"['1', '2', '3', '4', '5', '6', 'A', 'B', 'C', 'Q']"
+['J']
+['2']
+['SI']
+['A']
+['A']
+['SI']
+"['4', '6']"
+"['N', 'W']"
+"['N', 'W']"
+['L']
+"['2', '3', '4', 'B', 'D', 'N', 'Q', 'R']"
+['Q']
+['F']
+['Q']
+['Q']
+['F']
+['F']
+"['F', 'N', 'Q']"
+['F']
+['D']
+"['D', 'F', 'N']"
+['R']
+['R']
+['SI']
+['5']
+['H']
+['A']
+['A']
+['A']
+['A']
+['A']
+['H']
+['H']
+['G']
+['L']
+"['B', 'D']"
+['4']
+"['2', '3', '4', 'F', 'G']"
+['Q']
+['2']
+"['4', '6']"
+"['2', '3', '4']"
+['FS']
+['J']
+['4']
+"['E', 'F']"
+"['B', 'Q']"
+"['A', 'H']"
+['J']
+"['G', 'N', 'W']"
+"['A', 'C', 'J', 'L', 'M']"
+"['B', 'D', 'F', 'M']"
+['2']
+['6']
+"['4', '6']"
+['6']
+['2']
+['4']
+['L']
+"['1', '2', '4', '5', '6', 'A', 'C', 'E', 'J', 'N', 'Q', 'R', 'W']"
+['L']
+"['F', 'G']"
+['6']
+['1']
+"['A', 'B', 'C']"
+"['2', '3', '5']"
+"['1', '2', '3', '5', 'A', 'C', 'J']"
+"['J', 'M']"
+"['1', '2', '5']"
+"['2', 'B', 'F', 'G', 'Q']"
+"['N', 'R', 'W']"
+"['2', '3']"
+['G']
+['J']
+['SI']
+"['A', 'C', 'G']"
+"['D', 'F', 'N', 'Q']"
+['Q']
+"['1', '5', 'N', 'R', 'W']"
+"['7', 'E', 'G', 'M']"
+"['N', 'R']"
+['J']
+"['3', '4']"
+['6']
+['J']
+"['B', 'D', 'L', 'N', 'Q', 'R']"
+['F']
+['F']
+['SI']
+"['1', 'A']"
+['L']
+['6']
+['6']
+"['2', '5']"
+['F']
+['5']
+"['2', '3', '4']"
+['6']
+"['E', 'M', 'R']"
+['SI']
+"['J', 'M']"
+"['A', 'C']"
+['A']
+['2']
+['7']
+"['G', 'J', 'M']"
+"['4', 'B', 'D']"
+"['E', 'F', 'M', 'R']"
+"['D', 'F', 'G', 'N']"
+"['2', '3', '4', 'A', 'C', 'FS']"
+"['1', '2', '5']"
+"['2', '5']"
+"['2', '3', '4', 'A', 'C', 'G', 'J']"
+"['J', 'M']"
+['L']
+"['2', '3', '4']"
+"['E', 'M', 'R']"
+"['4', '6', '7', 'GS']"
+"['B', 'D', 'L']"
+['A']
+['SI']
+['SI']
+['SI']
+['G']
+"['2', '5']"
+"['J', 'L', 'M']"
+['3']
+"['J', 'M']"
+"['A', 'C']"
+"['1', '2', '5']"
+['A']
+"['A', 'C', 'G']"
+"['2', '3']"
+['SI']
+['7']
+['6']
+"['2', '5']"
+['A']
+"['2', '5']"
+"['E', 'F', 'M', 'R']"
+['F']
+['E']
+"['E', 'J']"
+"['A', 'C', 'F', 'N', 'R']"
+['SI']
+['L']
+['7']
+"['3', '4']"
+"['E', 'F']"
+"['B', 'F', 'N', 'Q']"
+"['4', 'B', 'D']"
+"['A', 'C']"
+"['3', '4']"
+"['J', 'M']"
+"['A', 'C']"
+"['E', 'M']"
+"['N', 'R', 'W']"
+"['F', 'Q']"
+"['A', 'C']"
+['L']
+['6']
+"['J', 'L', 'M']"
+['1']
+"['J', 'M']"
+['G']
+['7']
+['6']
+['L']
+['L']
+['5']
+['6']
+['4']
+['4']
+['G']
+['L']
+"['J', 'M']"
+['G']
+['Q']
+['F']
+['2']
+"['2', '3', '4']"
+['SI']
+"['3', '4', 'L']"
+['N']
+['2']
+"['B', 'Q']"
+"['E', 'M', 'R']"
+['D']
+['J']
+"['3', '4', 'A', 'C']"
+['SI']
+['Q']
+['SI']
+"['2', '3', 'FS']"
+['6']
+['Q']
+['F']
+['6']
+"['2', '5']"
+"['3', '4']"
+['SI']
+['2']
+"['N', 'Q', 'R', 'W']"
+['SI']
+"['2', '5', 'D', 'N', 'R']"
+"['B', 'FS', 'Q']"
+"['E', 'M', 'R']"
+"['7', 'N', 'W']"
+"['A', 'C']"
+"['1', '5', 'N', 'R', 'W']"
+['SI']
+"['3', '4', 'A', 'C']"
+['A']
+['H']
+['F']
+"['3', '4']"
+"['B', 'Q']"
+"['A', 'C']"
+"['2', '5']"
+"['F', 'G']"
+"['1', '5']"
+"['4', '6', 'A', 'C', 'E']"
+['SI']
+['6']
+['SI']
+"['E', 'M', 'R']"
+['2']
+['F']
+"['E', 'J']"
+['L']
+"['3', '4']"
+"['1', '2', '3', '5', '7', 'GS', 'N', 'Q', 'R', 'W']"
+['SI']
+['SI']
+"['B', 'D']"
+['L']
+"['D', 'N', 'R']"
+"['A', 'C']"
+['1']
+"['3', '4', 'A', 'C', 'J']"
+['7']
+"['A', 'B', 'C', 'D', 'E', 'F', 'M']"
+"['F', 'Q']"
+['2']
+"['2', '3', '4']"
+"['2', '5']"
+['6']
+"['N', 'R', 'W']"
+['6']
+['L']
+['2']
+"['E', 'J', 'M', 'R']"
+['4']
+['7']
+['E']
+['F']
+['6']
