@@ -16,10 +16,11 @@
                 <div class='station-desc col d-none'></div>
                 <div class='station-desc col d-none'></div>
             </div>
-            <div class='row'>
+            <div class='row panels'>
                 <div class='col' id='map'>
                     <div class='wrap sticky-top'></div>
                 </div>
+                {# <div class='col'><div id='map'></div></div> #}
                 <div class='marey col d-none' id='marey1'></div>
                 <div class='marey col d-none' id='marey2'></div>
             </div>
@@ -37,28 +38,7 @@
         console.log(line_colors)
 	</script>
 
-    <script>
-        d3.selection.prototype.first = function() {
-          return d3.select(this[0][0]);
-        };
-        d3.selection.prototype.last = function() {
-          return d3.select(this[0][this.size() - 1]);
-        };
-        d3.selection.prototype.moveToFront = function() {  
-          return this.each(function(){
-            this.parentNode.appendChild(this);
-          });
-        };
-        d3.selection.prototype.moveToBack = function() {  
-            return this.each(function() { 
-                var firstChild = this.parentNode.firstChild; 
-                if (firstChild) { 
-                    this.parentNode.insertBefore(this, firstChild); 
-                } 
-            });
-        };
-    </script>
-
+    
 	<script src="{{ url_for('static', filename='main.js') }}"></script>
 	<script>
 	// get the label data for each line

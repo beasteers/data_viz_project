@@ -5,10 +5,18 @@ var width = 900, // determines the overall scale of everything. the width will a
     mareyAspectRatio = 1 / 3, // width / height
     margin = {top: 250, left: 60, right: 120, bottom: 10}, // defines how much space to give for axes
     height = width / mareyAspectRatio;
+    mapHeight = width / mapAspectRatio;
+
+// var map = new L.Map("map", {center: [37.8, -96.9], zoom: 4})
+//     .addLayer(new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"));
+
+// var svgMap = d3.select(map.getPanes().overlayPane).append("svg"),
+//     g = svgMap.append("g").attr("class", "leaflet-zoom-hide");
+
 
 // create responsive svg for moray plots and map
-var svgMap = d3.select('#map .wrap').append('svg').call(responsiveSvg, {width: width, aspectRatio: mapAspectRatio}),
-	svgMareys = d3.selectAll('.marey').append('svg').call(responsiveSvg, {width: width, aspectRatio: mareyAspectRatio});
+var svgMap = d3.select('#map .wrap').append('svg').call(responsiveSvg, {width: width, aspectRatio: mapAspectRatio});
+var svgMareys = d3.selectAll('.marey').append('svg').call(responsiveSvg, {width: width, aspectRatio: mareyAspectRatio});
 
 svgMareys.append('g').attr('class', 'station-axis');
 
@@ -24,6 +32,8 @@ function oldestMarey(){
 	mareys.unshift(mareys.pop()); // move from end to front
 	return d3.select(mareys[0]);
 }
+
+// Map
 
 // Marey Plots
 
@@ -44,19 +54,56 @@ var yAxis = d3.axisLeft()
     .ticks(24)
     .tickFormat(formatTime);
 
+
+var iconBar = d3.selectAll('.marey').append('div').attr('class', 'diagram-icons');
+
+// create the line label
+iconBar.append('span').attr('class', 'subway-line marey-line');
+
+// create full-size icon
+iconBar.append('span').attr('class', 'ctl-button subway-line')
+	.on('click', function(){
+		var that = d3.select(this).closest('.col').node(); // select the parent column
+		
+		// select columns other than this one and that have data attached and toggle displaying them
+		d3.selectAll('#vis .panels .col')
+			.filter(function(){ 
+				return this != that && d3.select(this).select('svg').datum(); 
+			})
+			.classed('d-none', function (d, i) { return !d3.select(this).classed('d-none'); });
+
+
+	})
+	.append('i').attr('class', 'fa fa-expand')
+
+
 // create a close button for marey diagrams
-d3.selectAll('.marey').append('span').attr('class', 'close subway-line').html('&times;')
+iconBar.append('span').attr('class', 'ctl-button subway-line').html('&times;')
 	.on('click', function(d, i){ 
+		var col = d3.select(this).closest('.col');
+		var svg = col.select('svg');
+
 		// close marey diagram and deselect the line icon
-		var svg = d3.select(this.parentNode).classed('d-none', true).select('svg');
 		var station = svg.datum();
-		svg.datum(null);
 		d3.select('#subway-line-labels').selectAll('.subway-line')
 			.filter((d) => d.route_id == station.route_id)
 			.classed('selected', false);
+
+		// undo full screen
+		d3.selectAll('#vis .panels .col')
+			.filter(function(){ return d3.select(this).select('svg').datum(); })
+			.classed('d-none', false);
+
 		// push svg to front of the line
 		mareys.push(mareys.splice(i,1)[0]);
+
+		// clear svg data and update colors
+		svg.datum(null);
 		updateMapColors();
+		zoomMapTo();
+
+		// hide column
+		col.classed('d-none', true);
 	});
 
 
@@ -94,14 +141,22 @@ function drawSubwayLabels(subway_lines) {
 			// display line name
 			var title = details.select('.title').text(d.route_long_name)
 			title.append('span').text(' ('+d.route_short_name+')');
-			title.append('a').attr('class', 'badge badge-pill badge-light')
+			title.append('a').attr('class', 'badge badge-pill badge-dark')
 				.attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)');
 
 			// display line description
 			details.select('.description').text(d.route_desc);
 
+			console.log(d)
+			// set marey plot line label
+			svg.closest('.col').select('.marey-line').text(d.route_id)
+				.style('background-color', d.route_color ? '#'+d.route_color : null)
+				.style('color', d.route_text_color ? '#'+d.route_text_color : null)
+
+
 			// draw graph
 			loadMareyDiagram(d, svg.datum(d));
+			zoomMapTo();
 		});
 }
 
@@ -127,11 +182,32 @@ function drawMareyDiagram(stations, trips, svg) {
 
 	// Create axis
 	var station = svg.select('.station-axis').selectAll('.station')
-		.data(stations, (d) => d.stop_id)
+		.data(stations, (d) => d.stop_id);
 		
 		
 	var station_enter = station.enter().append('g').attr('class', 'station')
-		.attr("transform", (d) => `translate(${x(d.distance)}, ${margin.top})`);
+
+	station_enter
+		.attr("transform", `translate(0,${margin.top})`)
+		.on('mouseover', function(){
+			var data = d3.select(this).datum();
+			d3.selectAll('#map .map-station')
+				.filter(function(d){return d.stop_name == data.stop_name; })
+				.classed('hover', true).moveToFront()
+				.transition().duration(300)
+				.attr('r', '8px');
+
+			d3.select(this).classed('hover', true);
+		})
+		.on('mouseout', function(){
+			d3.selectAll('#map .map-station').classed('hover', false)
+				.transition().duration(300)
+				.attr('r', '5px');
+			
+			d3.select(this).classed('hover', false);
+		})
+		.transition().duration(300)
+		.attr("transform", (d) => `translate(${x(d.distance)},${margin.top})`);
 		
 
 	station_enter.append("text")
@@ -168,11 +244,13 @@ function drawMareyDiagram(stations, trips, svg) {
 	//   .attr("r", 2);
 
 	// draw trip paths here
+	var line = svg.datum().route_id;
+	d3.selectAll('.map-station').filter((d) => d.properties.lines.includes(line)).moveToFront();
 }
 
 
 
-function drawMap(geojson, stations) {
+function drawMap(geojson, stations, line) {
 	// http://codewritingcow.com/d3-js/maps/americas/united-states/new-york/new-york-city/
 
 	// d3+leaflet https://bost.ocks.org/mike/leaflet/
@@ -181,31 +259,92 @@ function drawMap(geojson, stations) {
 	    scale = width*(mapAspectRatio + mapRatioAdjuster), //width * (width / height + mapRatioAdjuster),
 	    nyc_center = [-74, 40.7];
 
-    // Create the geographic projection
+
+    // Set geographic projection
     var projection = d3.geoMercator()
     	.translate([width / 2, (width / mapAspectRatio) / 2])
     	.scale(scale).center(nyc_center);
 
     // create line generator
-	var geoPath = d3.geoPath().projection(projection);
+	var path = d3.geoPath().projection(projection);
 
-	svgMap.selectAll('path')
-	  .data(geojson.features)
-	  .enter()
-	  .append('path')
-	  .attr('stroke', '#000')
+	// draw trips
+	var lines = svgMap.datum(geojson || svgMap.datum()).selectAll('.line')
+	  	.data((d) => d.features);
+
+	lines.enter()
+	  .append('path').attr('class', 'line')
+	  .attr('stroke', 'white')
 	  .attr('stroke-width', '1px')
 	  .attr('fill', 'none')
-	  .attr('d', geoPath);
+	  .attr('d', path);
 
-	  // draw stations here
-	  svgMap.selectAll('.map-station')
-		.data(stations).enter()
-		.append("circle").attr('class', 'map-station')
-		.attr("cx", function (d) { return projection([d.stop_lon, d.stop_lat])[0]; })
-		.attr("cy", function (d) { return projection([d.stop_lon, d.stop_lat])[1]; })
-		.attr("r", "3px")
-		.call(setLineColor)
+	lines
+		.attr('d', path);
+
+  // draw stations here
+  var stationPoints = svgMap.selectAll('.map-station')
+
+  stationPoints.data(stations.features || stationPoints.data())
+	.enter().append("path").attr('class', 'map-station')
+	.attr("r", "5px")
+	.attr('d', path)
+	.on('mouseover', function(){
+		var data = d3.select(this).datum();
+		d3.select(this).classed('hover', true).moveToFront()
+			.transition().duration(300)
+			.attr('r', '8px');
+
+		d3.selectAll('.marey .station')
+			.filter(function(d){return d.stop_name == data.stop_name; })
+			.classed('hover', true);
+	})
+	.on('mouseout', function(){
+		d3.select(this).classed('hover', false)
+			.transition().duration(300)
+			.attr('r', '5px');
+		
+		d3.selectAll('.marey .station').classed('hover', false);
+	});
+
+	updateMapColors();
+	zoomMapTo(line);
+
+
+}
+
+function zoomMapTo(line, features) {
+	var route_ids = svgMareys.data().map((d) => d ? d.route_id : null).filter((d)=>d);
+
+	features = features || []; // prevent attribute error
+	// use specified features, default to features defined by line
+	features = features.length ? features : svgMap.selectAll('.map-station').filter((d) => d.properties.train == line ).data();
+	// if neither of those work, default to only visible lines (lines in marey)
+	features = features.length ? features : svgMap.selectAll('.map-station').filter((d) => route_ids.includes(d.properties.train) ).data();
+	// otherwise, just select all
+	features = features.length ? features : svgMap.selectAll('.map-station').data();
+	console.log(line, route_ids, features);
+	if(!features.length) return;
+
+    
+    // Set geographic projection
+    var projection = d3.geoMercator()
+    	.translate([width / 2, (width / mapAspectRatio) / 2])
+    	.fitSize([width, mapHeight], {
+		type: 'FeatureCollection',
+		features: features
+	});
+
+    // create line generator
+	var path = d3.geoPath().projection(projection);
+
+    svgMap.selectAll('.line')
+    	.transition().duration(600)
+    	.attr('d', path);
+
+    svgMap.selectAll('.map-station')
+    	.transition().duration(600)
+    	.attr('d', path);
 }
 
 
@@ -220,16 +359,21 @@ function responsiveSvg(el, o){
 }
 
 
-function setLineColor(el, def) {
-	el.attr("fill", (d) => line_colors[d.train] ? '#' + line_colors[d.train] : (def || 'black'))
+function lineColor(d, def) {
+	return line_colors[d.properties.train] ? '#' + line_colors[d.properties.train] : (def || 'black');
 }
 
 function updateMapColors(){
-	var route_ids = svgMareys.data().map((d) => d && d.route_id);
-	var show_all = !route_ids.filter((d)=>d).length; // if no svgs are selected show all colors
+	var route_ids = svgMareys.data().map((d) => d ? d.route_id : null).filter((d)=>d);
+	var show_all = !route_ids.length; // if no svgs are selected show all colors
 	var map_stations = svgMap.selectAll('.map-station');
-	map_stations.filter((d) => !(route_ids.includes(d.train) || show_all)).attr('fill', 'lightgrey');
-	map_stations.filter((d) => route_ids.includes(d.train) || show_all).call(setLineColor);
+	
+	var is_focused = (d) => route_ids.includes(d.properties.train) || show_all;
+
+	map_stations.transition().duration(300)
+		.attr('fill', function(d) { return is_focused(d) ? lineColor(d) : 'lightgrey'; })
+		.attr('r', (d) => show_all ? '5' : (is_focused(d) ? '10' : '3' ))
+		.style('opacity', (d) => is_focused(d) ? 1 : 0.5);
 }
 
 

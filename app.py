@@ -26,7 +26,7 @@ def load_map_geojson():
 	)).values.tolist()
 
 	return dict(
-		type='geojson',
+		type='FeatureCollection',
 		features=features
 	)
 
@@ -56,10 +56,27 @@ def load_stations():
 def load_subway_labels():
 	return pd.read_csv(data_file('routes.txt'))
 
+def get_station_geojson(stations):
+	# convert to geojson
+	features = stations.reset_index().apply(lambda x: dict(
+		type='Feature',
+		properties=x.to_dict(),
+		geometry=dict(
+			type='Point',
+			coordinates=(x['stop_lon'], x['stop_lat'])
+		)
+	), axis=1).values.tolist()
+
+	return dict(
+		type='FeatureCollection',
+		features=features
+	)
+
 
 map_geojson = load_map_geojson()
 stop_times = load_stop_times()
 stations = load_stations()
+station_geojson = get_station_geojson(stations)
 subway_labels = load_subway_labels()
 line_colors = subway_labels.set_index('route_id')['route_color'].fillna('black')
 
@@ -69,7 +86,7 @@ line_colors = subway_labels.set_index('route_id')['route_color'].fillna('black')
 @app.route('/')
 def index():
     return render_template('index.j2', 
-    		map_geojson=map_geojson, stations=stations.reset_index().to_dict(orient='records'), 
+    		map_geojson=map_geojson, stations=station_geojson, 
     		subway_labels=subway_labels.to_dict(orient='records'), line_colors=line_colors.to_dict())
 
 
@@ -94,6 +111,7 @@ stops_and_times: # for paths
 	
 
 '''
+
 
 
 @app.route('/data/stations/<line>')
