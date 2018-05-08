@@ -163,7 +163,7 @@ h1,h2,h3,h4,h5,h6 {
 	margin: 0.3em;
 	background: black;
 	color: white;
-	border: 1px solid transparent;
+	border: 1px solid #4c4c4c;
 
 	line-height: 2em;
 	text-align: center;
