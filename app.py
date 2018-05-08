@@ -13,7 +13,7 @@ data_file = lambda f: os.path.join(data_dir, f)
 
 def load_map_geojson():
 	# load map data
-	map_data = pd.read_csv(data_file('shapes.txt')).set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
+	map_data = pd.read_csv(data_file('new_shape.csv')).set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
 
 	# convert to geojson
 	features = map_data.groupby(level=0).apply(lambda x: dict(
@@ -50,7 +50,7 @@ def dist_from_coordinates(pt1, pt2):
 
 def load_stations():
 	# load information about stations
-	df = pd.read_pickle(data_file('stop_train.pkl')).set_index('train')
+	df = pd.read_pickle(data_file('stop_train.pkl')).set_index(['train', 'stop_sequence']).sort_index()
 	return df
 
 def load_subway_labels():
@@ -73,12 +73,12 @@ def get_station_geojson(stations):
 	)
 
 
-map_geojson = load_map_geojson()
-stop_times = load_stop_times()
-stations = load_stations()
-station_geojson = get_station_geojson(stations)
-subway_labels = load_subway_labels()
-line_colors = subway_labels.set_index('route_id')['route_color'].fillna('black')
+map_geojson = load_map_geojson() # loads line data for mapping
+stop_times = load_stop_times() # loads the data for the individual train trips
+stations = load_stations() # for getting station axis data
+station_geojson = get_station_geojson(stations) # for drawing station points on map
+subway_labels = load_subway_labels() # load the data for each individual subway line
+line_colors = subway_labels.set_index('route_id')['route_color'].fillna('black') # get a mapping of line -> color
 
 
 
@@ -121,7 +121,7 @@ def get_station_data(line):
 	# except KeyError: # if it doesn't exist, return empty list
 	# 	data = []
 	try: # get times for a specific line
-		df = stations.loc[line].sort_values('stop_id')
+		df = stations.loc[line]
 		# filter for only stations on `line` and sort order
 		latlon = df[['stop_lon', 'stop_lat']].values
 		df['distance'] = [0] + [dist_from_coordinates(pt1, pt2) for pt1, pt2 in zip(latlon[1:], latlon[:-1])]

@@ -35,6 +35,9 @@ function oldestMarey(){
 
 // Map
 
+var svgMapStations = svgMap.append('g'),
+	svgMapLines = svgMap.append('g');
+
 // Marey Plots
 
 var line = d3.line()
@@ -172,7 +175,7 @@ function loadMareyDiagram(line, svg) {
 
 function drawMareyDiagram(stations, trips, svg) {
 	x.domain(d3.extent(stations, (d) => d.distance));
-	console.log(stations);
+	console.log(5555, stations, trips);
 
 	// come out of hiding
 	d3.select(svg.node().parentNode).classed('d-none', false);
@@ -269,12 +272,12 @@ function drawMap(geojson, stations, line) {
 	var path = d3.geoPath().projection(projection);
 
 	// draw trips
-	var lines = svgMap.datum(geojson || svgMap.datum()).selectAll('.line')
+	var lines = svgMapLines.datum(geojson || svgMapLines.datum()).selectAll('.line')
 	  	.data((d) => d.features);
 
 	lines.enter()
 	  .append('path').attr('class', 'line')
-	  .attr('stroke', 'white')
+	  .attr('stroke', (d) => d.route_color ? '#'+d.route_color : null)
 	  .attr('stroke-width', '1px')
 	  .attr('fill', 'none')
 	  .attr('d', path);
@@ -283,7 +286,7 @@ function drawMap(geojson, stations, line) {
 		.attr('d', path);
 
   // draw stations here
-  var stationPoints = svgMap.selectAll('.map-station')
+  var stationPoints = svgMapStations.selectAll('.map-station')
 
   stationPoints.data(stations.features || stationPoints.data())
 	.enter().append("path").attr('class', 'map-station')
@@ -318,11 +321,11 @@ function zoomMapTo(line, features) {
 
 	features = features || []; // prevent attribute error
 	// use specified features, default to features defined by line
-	features = features.length ? features : svgMap.selectAll('.map-station').filter((d) => d.properties.train == line ).data();
+	features = features.length ? features : svgMapStations.selectAll('.map-station').filter((d) => d.properties.train == line ).data();
 	// if neither of those work, default to only visible lines (lines in marey)
-	features = features.length ? features : svgMap.selectAll('.map-station').filter((d) => route_ids.includes(d.properties.train) ).data();
+	features = features.length ? features : svgMapStations.selectAll('.map-station').filter((d) => route_ids.includes(d.properties.train) ).data();
 	// otherwise, just select all
-	features = features.length ? features : svgMap.selectAll('.map-station').data();
+	features = features.length ? features : svgMapStations.selectAll('.map-station').data();
 	console.log(line, route_ids, features);
 	if(!features.length) return;
 
@@ -338,11 +341,11 @@ function zoomMapTo(line, features) {
     // create line generator
 	var path = d3.geoPath().projection(projection);
 
-    svgMap.selectAll('.line')
+    svgMapLines.selectAll('.line')
     	.transition().duration(600)
     	.attr('d', path);
 
-    svgMap.selectAll('.map-station')
+    svgMapStations.selectAll('.map-station')
     	.transition().duration(600)
     	.attr('d', path);
 }
@@ -366,14 +369,17 @@ function lineColor(d, def) {
 function updateMapColors(){
 	var route_ids = svgMareys.data().map((d) => d ? d.route_id : null).filter((d)=>d);
 	var show_all = !route_ids.length; // if no svgs are selected show all colors
-	var map_stations = svgMap.selectAll('.map-station');
+	var map_stations = svgMapStations.selectAll('.map-station');
 	
 	var is_focused = (d) => route_ids.includes(d.properties.train) || show_all;
 
-	map_stations.transition().duration(300)
-		.attr('fill', function(d) { return is_focused(d) ? lineColor(d) : 'lightgrey'; })
+	map_stations.transition().duration(300).attr('stroke', 'white').attr('stroke-width', 1)
+		.attr('fill', function(d) { return is_focused(d) ? 'white' : 'lightgrey'; })
 		.attr('r', (d) => show_all ? '5' : (is_focused(d) ? '10' : '3' ))
 		.style('opacity', (d) => is_focused(d) ? 1 : 0.5);
+
+	if(!show_all)
+		map_stations.filter(is_focused).moveToFront();
 }
 
 

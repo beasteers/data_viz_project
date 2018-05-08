@@ -50,19 +50,24 @@ h1,h2,h3,h4,h5,h6 {
 
 .map-stations:not(.selected) {
 	fill: lightgrey !important;
+	stroke: white;
+	stroke-width: 1;
 }
 
 .map-station.hover {
 	/*border: 2px solid lightgrey;*/
-	stroke: white;
 	stroke-width: 2;
+}
+
+#vis #map svg {
+	overflow: hidden;
 }
 
 
 /* Marey Diagrams */
 
 #vis .panels .col {
-	max-width: 500px;
+	max-width: 900px;
 	margin: 0 auto;
 }
 
@@ -72,10 +77,6 @@ h1,h2,h3,h4,h5,h6 {
 	margin: 1em 0;
 	overflow: visible;
 	display: block;
-}
-
-#vis #map svg {
-	overflow: hidden;
 }
 
 #vis .col {
@@ -110,6 +111,20 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 
+.station text {
+	font-size: 10px;
+	opacity: 0;
+	transition: opacity 0.2s ease-in-out,
+				stroke 0.2s ease-in-out;
+}
+
+.station:first-child text,
+.station:last-child text,
+.station:nth-child(5n) text,
+.station:hover text {
+	opacity: 1;
+}
+
 .station line {
 	stroke: #333;
 	stroke-width: 3px;
@@ -122,7 +137,7 @@ h1,h2,h3,h4,h5,h6 {
 
 
 .station.hover text {
-	stroke: red;
+	stroke: yellow;
 }
 
 .station.hover line {
