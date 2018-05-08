@@ -81,8 +81,15 @@ iconBar.append('span').attr('class', 'ctl-button subway-line')
 
 
 // create a close button for marey diagrams
-iconBar.append('span').attr('class', 'ctl-button subway-line').html('&times;')
+iconBar.append('span').attr('class', 'ctl-button subway-line hiding').html('&times;')
 	.on('click', function(d, i){ 
+		var svg = svgMareys.filter((s) => s && s.route_id == d.route_id);
+			//preventing train duplicating
+			if (!svg.empty()){
+				var close_button = svg.closest('.col').select('.hiding')
+				close_button.on('click').apply(close_button.node());
+				return;
+			}
 		var col = d3.select(this).closest('.col');
 		var svg = col.select('svg');
 
