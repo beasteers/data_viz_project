@@ -72,6 +72,9 @@ def get_station_geojson(stations):
 		features=features
 	)
 
+def get_distances_for_line(line):
+	pass
+
 
 map_geojson = load_map_geojson() # loads line data for mapping
 stop_times = load_stop_times() # loads the data for the individual train trips
@@ -135,7 +138,8 @@ def get_station_data(line):
 @app.route('/data/trips/<line>')
 def get_trips_data(line):
 	try: # get times for a specific line
-		data = stop_times.loc[line].to_dict(orient='records')
+
+		data = stop_times.loc[line].groupby('trip_id').apply(lambda x: x.to_dict(orient='records')).tolist()
 	except KeyError: # if it doesn't exist, return empty list
 		data = []
 	return jsonify(data)

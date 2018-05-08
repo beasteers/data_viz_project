@@ -229,6 +229,8 @@ function drawMareyDiagram(stations, trips, svg) {
 	  .attr('transform', `translate(${margin.left},0)`)
 	  .call(yAxis);
 
+	// https://bl.ocks.org/mbostock/5544008
+
 	// var train = svg.append("g")
 	//   .attr("class", "train")
 	//   .attr("clip-path", "url(#clip)")
@@ -240,15 +242,10 @@ function drawMareyDiagram(stations, trips, svg) {
 	// train.append("path")
 	//   .attr("d", function(d) { return line(d.stops); });
 
-	// train.selectAll("circle")
-	//   .data(function(d) { return d.stops; })
-	// .enter().append("circle")
-	//   .attr("transform", function(d) { return "translate(" + x(d.time) + "," + y(d.station.distance) + ")"; })
-	//   .attr("r", 2);
 
 	// draw trip paths here
-	var line = svg.datum().route_id;
-	d3.selectAll('.map-station').filter((d) => d.properties.lines.includes(line)).moveToFront();
+	var route_id = svg.datum().route_id;
+	d3.selectAll('.map-station').filter((d) => d.properties.lines.includes(route_id)).moveToFront();
 }
 
 
