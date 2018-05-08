@@ -213,11 +213,38 @@ function drawMareyDiagram(stations, trips, svg) {
 		.attr("transform", (d) => `translate(${x(d.distance)},${margin.top})`);
 		
 
-	station_enter.append("text")
+	// draw circles
+	var g = station_enter.append("g").attr('class', 'station-label');
+
+	g.append("text")
 		.attr("x", -6)
 		.attr("dy", ".35em")
-		.attr("transform", 'translate(0,-20)rotate(-60)')
 		.text((d) => d.stop_name);
+
+	g.selectAll("circle").data((d) => d.lines)
+		.enter().append("circle")
+		.data(function(d) {
+			var that = this;
+			return d.lines.map(function(route_id){
+				var bbox = d3.select(that.parentNode)
+					.select('text').node()
+					.getBoundingClientRect();
+
+				return {
+					route_id: route_id,
+					y: bbox.height / 2,
+					offset: bbox.width
+				}
+			});
+		})
+		.attr("r", 3)
+		.attr("cx", function(d,i) {return 5 + 3*d.offset + i*3*3;})
+		.attr("cy", function(d,i) {return d.y;})
+		.attr("fill", function(d) {return line_colors[d.route_id] ? '#' + line_colors[d.route_id] : null})
+		.attr('stroke', 'white')
+		.text((d) => d.route_id);
+
+	g.attr("transform", 'translate(0,0)rotate(-60)');
 
 	station_enter.append("line")
 		.attr("y2", height - margin.top - margin.bottom);
@@ -242,6 +269,16 @@ function drawMareyDiagram(stations, trips, svg) {
 	// train.append("path")
 	//   .attr("d", function(d) { return line(d.stops); });
 
+	draw lines
+	var line = d3.line()
+		.x(function(d,i) {return x(d.distance);})
+		.y(function(d) {return y(d.time);})
+	
+	svg.append("g")
+		.selectAll(".trip").data(trips).enter().append("path")
+		.attr("class", "trip")
+		.attr("d", line)
+		.attr("stroke", "white")
 
 	// draw trip paths here
 	var route_id = svg.datum().route_id;
