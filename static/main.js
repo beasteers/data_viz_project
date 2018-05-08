@@ -67,11 +67,11 @@ iconBar.append('span').attr('class', 'subway-line marey-line');
 iconBar.append('span').attr('class', 'ctl-button subway-line')
 	.on('click', function(){
 		var that = d3.select(this).closest('.col').node(); // select the parent column
-		
 		// select columns other than this one and that have data attached and toggle displaying them
 		d3.selectAll('#vis .panels .col')
 			.filter(function(){ 
-				return this != that && d3.select(this).select('svg').datum(); 
+				var el = d3.select(this);
+				return el.attr('id') == 'map' || (this != that && el.select('svg').datum()); 
 			})
 			.classed('d-none', function (d, i) { return !d3.select(this).classed('d-none'); });
 
@@ -81,8 +81,9 @@ iconBar.append('span').attr('class', 'ctl-button subway-line')
 
 
 // create a close button for marey diagrams
-iconBar.append('span').attr('class', 'ctl-button subway-line').html('&times;')
+iconBar.append('span').attr('class', 'ctl-button subway-line hiding').html('&times;')
 	.on('click', function(d, i){ 
+		
 		var col = d3.select(this).closest('.col');
 		var svg = col.select('svg');
 
@@ -129,6 +130,14 @@ function drawSubwayLabels(subway_lines) {
 		.style('color', (d) => d.route_text_color ? '#'+d.route_text_color : null)
 		.text(d => d.route_id)
 		.on('click', function(d) {
+
+			var svg = svgMareys.filter((s) => s && s.route_id == d.route_id);
+			//preventing train duplicating
+			if (!svg.empty()){
+				var close_button = svg.closest('.col').select('.hiding')
+				close_button.on('click').apply(close_button.node());
+				return;
+			}
 			var svg = oldestMarey();
 			var station = svg.datum() || {};
 
@@ -138,19 +147,17 @@ function drawSubwayLabels(subway_lines) {
 				.classed('selected', false);
 			d3.select(this).classed('selected', true);
 
-			// display line details
-			var details = d3.select('#line-details')
+			// // display line details
+			// var details = d3.select('#line-details')
 
-			// display line name
-			var title = details.select('.title').text(d.route_long_name)
-			title.append('span').text(' ('+d.route_short_name+')');
-			title.append('a').attr('class', 'badge badge-pill badge-dark')
-				.attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)');
+			// // display line name
+			// var title = details.select('.title').text(d.route_long_name)
+			// title.append('span').text(' ('+d.route_short_name+')');
+			// title.append('a').attr('class', 'badge badge-pill badge-dark')
+			// 	.attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)');
 
-			// display line description
-			details.select('.description').text(d.route_desc);
-
-			console.log(d)
+			// // display line description
+			// details.select('.description').text(d.route_desc);
 			// set marey plot line label
 			svg.closest('.col').select('.marey-line').text(d.route_id)
 				.style('background-color', d.route_color ? '#'+d.route_color : null)
@@ -428,4 +435,3 @@ function throttle(fn, restPeriod){
 		}
 	}
 }
-
