@@ -110,18 +110,20 @@ h1,h2,h3,h4,h5,h6 {
 	border: 1px solid white;
 }
 
+.station .station-label {
+	opacity: 0;
+	transition: opacity 0.2s ease-in-out;
+}
 
 .station text {
 	font-size: 10px;
-	opacity: 0;
-	transition: opacity 0.2s ease-in-out,
-				stroke 0.2s ease-in-out;
+	transition: stroke 0.2s ease-in-out;
 }
 
 .station:first-child text,
 .station:last-child text,
 .station:nth-child(5n) text,
-.station:hover text {
+.station:hover .station-label {
 	opacity: 1;
 }
 
@@ -130,8 +132,10 @@ h1,h2,h3,h4,h5,h6 {
 	stroke-width: 3px;
 }
 
-.station:last-child line {
+.station:last-child line,
+.y.axis .domain {
 	stroke: white;
+	stroke-width: 2px;
 }
 
 
