@@ -3,7 +3,7 @@
 var width = 900, // determines the overall scale of everything. the width will always just fill the available space
     mapAspectRatio = 1, 
     mareyAspectRatio = 1 / 5, // width / height
-    margin = {top: 250, left: 60, right: 120, bottom: 10}, // defines how much space to give for axes
+    margin = {top: 250, left: 60, right: 60, bottom: 10}, // defines how much space to give for axes
     height = width / mareyAspectRatio;
     mapHeight = width / mapAspectRatio;
 
@@ -45,8 +45,10 @@ function oldestMarey(){
 
 // Map
 
-var svgMapLines = svgMap.append('g'), 
-svgMapStations = svgMap.append('g');
+var svgMapLines = svgMap.append('g').attr('class', 'g-line');
+var svgMapStations = svgMap.append('g').attr('class', 'g-station');
+
+var lineTooltip = d3.select('body').append('div').attr('class', 'subway-line line-tooltip');
 
 // Marey Plots
 
@@ -215,6 +217,9 @@ function drawMareyDiagram(stations, trips, svg) {
 				.attr('r', '8px');
 
 			d3.select(this).classed('hover', true);
+			d3.select(this.previousElementSibling).classed('hidden', true);
+			d3.select(this.nextElementSibling).classed('hidden', true);
+
 		})
 		.on('mouseout', function(){
 			d3.selectAll('#map .map-station').classed('hover', false)
@@ -222,6 +227,8 @@ function drawMareyDiagram(stations, trips, svg) {
 				.attr('r', '5px');
 			
 			d3.select(this).classed('hover', false);
+			d3.select(this.previousElementSibling).classed('hidden', false);
+			d3.select(this.nextElementSibling).classed('hidden', false);
 		})
 		.transition().duration(300)
 		.attr("transform", (d) => `translate(${x(d.distance)},0)`);
@@ -238,33 +245,42 @@ function drawMareyDiagram(stations, trips, svg) {
 		.attr("dy", ".35em")
 		.text((d) => d.stop_name);
 
-	g.selectAll("circle").data((d) => d.lines)
-		.enter().append("circle")
-		.data(function(d) {
-			var that = this;
-			return d.lines.map(function(route_id){
-				var bbox = d3.select(that.parentNode)
-					.select('text').node()
-					.getBoundingClientRect();
+	// g.selectAll("circle").data((d) => d.lines)
+	// 	.enter().append("circle")
+	// 	.data(function(d) {
+	// 		var that = this;
+	// 		return d.lines.map(function(route_id){
+	// 			var bbox = d3.select(that.parentNode)
+	// 				.select('text').node()
+	// 				.getBoundingClientRect();
 
-				return {
-					route_id: route_id,
-					y: bbox.height / 2,
-					offset: bbox.width
-				}
-			});
-		})
-		.attr("r", 3)
-		.attr("cx", function(d,i) {return 5 + 2*d.offset + i*3*3;})
-		.attr("cy", function(d,i) {return d.y;})
-		.attr("fill", function(d) {return line_colors[d.route_id] ? '#' + line_colors[d.route_id] : null})
-		.attr('stroke', 'white')
-		.text((d) => d.route_id);
+	// 			return {
+	// 				route_id: route_id,
+	// 				y: bbox.height / 2,
+	// 				offset: bbox.width
+	// 			}
+	// 		});
+	// 	})
+	// 	.attr("r", 3)
+	// 	.attr("cx", function(d,i) {return 5 + d.offset + i*3*3;})
+	// 	.attr("cy", function(d,i) {return d.y;})
+	// 	.attr("fill", function(d) {return line_colors[d.route_id] ? '#' + line_colors[d.route_id] : null})
+	// 	// .attr('stroke', 'white')
+	// 	.text((d) => d.route_id);
 
-	g.attr("transform", 'translate(0,-20)rotate(-60)');
+	g.attr("transform", 'translate(0,-20)rotate(-75)');
 
 	station_enter.append("line")
 		.attr("y2", height - margin.top - margin.bottom);
+
+	station.enter.append('rect')
+		.attr('x', 0).attr('y', 0)
+		.attr('height', height - margin.top - margin.bottom)
+		.attr('width', function(d1){
+			var d2 = d3.select(this.nextElementSibling).datum();
+			if(!d2) return;
+			return y(d2.distance) - y(d1.distance);
+		})
 
 	station.exit().remove();
 
@@ -272,6 +288,7 @@ function drawMareyDiagram(stations, trips, svg) {
 	  .attr("class", "y left axis")
 	  .attr('transform', `translate(${margin.left},0)`)
 	  .call(yAxis);
+
 
 	//draw lines
 	var line = d3.line()
@@ -305,7 +322,6 @@ function drawMareyDiagram(stations, trips, svg) {
 
 function drawMap(geojson, stations, line) {
 	// http://codewritingcow.com/d3-js/maps/americas/united-states/new-york/new-york-city/
-
 	// d3+leaflet https://bost.ocks.org/mike/leaflet/
 
 	var mapRatioAdjuster = 100,
@@ -325,14 +341,17 @@ function drawMap(geojson, stations, line) {
 	// draw trips
 	var lines = svgMapLines.datum(geojson || svgMapLines.datum()).selectAll('.line')
 	  	.data((d) => d.features);
-
+	console.log(lineTooltip)
 	lines.enter()
-	  .append('path').attr('class', 'line')//
+	  .append('path').attr('class', 'line')
 	  .attr('stroke', (d) => d.properties.route_color ? '#'+d.properties.route_color : '#666')
-	  .attr('stroke-width', '2.5')
-	  .attr('fill', 'none')
-	  .style('opacity', 0.7)
-	  .attr('d', path);
+	  .attr('d', path)
+	  // add a tooltip
+	  .call(bindTooltip, lineTooltip)
+	  .on('mouseover.modify_tooltip', function(d) {
+	  	lineTooltip.text(d.properties.train)
+	  		.style('background-color', d.properties.route_color ? '#'+d.properties.route_color : '#666');
+	  })
 
 	lines
 		.attr('d', path);
@@ -344,8 +363,7 @@ function drawMap(geojson, stations, line) {
 	.enter().append("path").attr('class', 'map-station')
 	.attr("r", "5px")
 	.attr('d', path)
-	.on('mouseover', function(){
-		var data = d3.select(this).datum();
+	.on('mouseover', function(data){
 		d3.select(this).classed('hover', true).moveToFront()
 			.transition().duration(300)
 			.attr('r', '8px');
@@ -430,18 +448,43 @@ function updateMapColors(){
 	map_stations.transition().duration(300).attr('stroke', 'white').attr('stroke-width', 1)
 		.attr('fill', function(d) { return is_focused(d) ? 'white' : 'lightgrey'; })
 		.attr('r', (d) => show_all ? '3' : (is_focused(d) ? '10' : '2' ))
-		.style('opacity', (d) => is_focused(d) ? 1 : 0.5);
+		.style('opacity', (d) => is_focused(d) ? 1 : 0.2);
 
 	map_lines.transition().duration(300)
 		.attr('stroke', function(d) { return lineColor(d); })
 		.attr('stroke-width', (d) => show_all ? '3' : (is_focused(d) ? '6' : '2' ))
-		.style('opacity', (d) => is_focused(d) ? 1 : 0.3);
+		.style('opacity', (d) => is_focused(d) ? 1 : 0.1);
 
 	if(!show_all){
 		map_stations.filter(is_focused).moveToFront();
 		map_lines.filter(is_focused).moveToFront();
 	}
 }
+
+
+function bindTooltip(el, tooltip, o) {
+	o = Object.assign({
+		left: (box) => - box.width / 2,
+		top: (box) =>  - box.height - 8,
+		updateOn: 'mousemove'
+	}, o);
+
+	tooltip.classed('d3-tooltip', true);
+	el.on('mouseover.tooltip_show', function(){
+		tooltip.classed('tooltip-show', true);
+	})
+	.on(`${o.updateOn}.tooltip_move`, function(){
+		var bb = tooltip.node().getBoundingClientRect();
+		tooltip
+			.style('left', (d3.event.pageX + o.left(bb)) + 'px')
+			.style('top', (d3.event.pageY + o.top(bb)) + 'px');
+	})
+	.on('mouseout.tooltip_hide', function(){
+		tooltip.classed('tooltip-show', false);
+	});
+}
+
+
 
 
 function throttle(fn, restPeriod){ 
