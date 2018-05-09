@@ -28,6 +28,9 @@ h1,h2,h3,h4,h5,h6 {
 	color: white;
 	border-radius: 0px;
 	border: 2px solid white;
+	left: 300px;
+	width: 400px;
+	top:146px;
 }
 
 .line-details:after {

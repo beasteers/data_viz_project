@@ -24,7 +24,7 @@ svgMareys.append('g').attr('class', 'lines');
 
 // create line-details here
 // Define the div for the tooltip
-var mareylinetip = svgMareys.parent().append('div')
+var mareylinetip = d3.select("body").append('div')
   .attr('class', 'line-details');
 
 mareylinetip.append('div').attr('class', 'title')
@@ -159,17 +159,16 @@ function drawSubwayLabels(subway_lines) {
 
 			d3.select(this).classed('selected', true);
 
-			// display line details
-			var details = d3.select(this).select('.line-details')
 
 			// display line name
-			var title = details.select('.title').text(d.route_long_name)
+			var title = mareylinetip.select('.title').text(d.route_long_name)
 			title.append('span').text(' ('+d.route_short_name+')');
 			title.append('a').attr('class', 'badge badge-pill badge-dark')
-				.attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)');
+				// .attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)')
+				;
 
 			// display line description
-			details.select('.description').text(d.route_desc);
+			mareylinetip.select('.description').text(d.route_desc);
 
 
 
@@ -177,6 +176,10 @@ function drawSubwayLabels(subway_lines) {
 			svg.closest('.col').select('.marey-line').text(d.route_id)
 				.style('background-color', d.route_color ? '#'+d.route_color : null)
 				.style('color', d.route_text_color ? '#'+d.route_text_color : null)
+				.call(bindTooltip, mareylinetip, {
+					top: (b) => 5,
+					left: (b) => -b.width
+				})
 
 
 			// draw graph
