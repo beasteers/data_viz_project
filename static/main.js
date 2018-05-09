@@ -110,8 +110,7 @@ iconBar.append('span').attr('class', 'ctl-button subway-line hiding').html('&tim
 		// hide column
 		col.classed('d-none', true);
 	});
-
-
+	
 // // cipping path for lines so they don't show outside of the plot. idk I found it in the marey example
 // svgMareys.append("defs").append("clipPath")
 //     .attr("id", "clip")
@@ -146,6 +145,7 @@ function drawSubwayLabels(subway_lines) {
 			d3.select('#subway-line-labels').selectAll('.subway-line')
 				.filter((d) => d.route_id == station.route_id)
 				.classed('selected', false);
+
 			d3.select(this).classed('selected', true);
 
 			// // display line details
@@ -457,4 +457,21 @@ function throttle(fn, restPeriod){
 			setTimeout((d) => { free = true; }, restPeriod);
 		}
 	}
+}
+
+// about
+function show_about(visible) {
+    if (visible) {
+        document.getElementById("about_box_bkg").className = "show";
+        document.getElementById("about_box").className = "show";
+        document.getElementById("about_box").style.pointerEvents = "all";
+    } else {
+        document.getElementById("about_box_bkg").className = "hide";
+        document.getElementById("about_box").className = "hide";
+        document.getElementById("about_box").style.pointerEvents = "none";
+    }
+}
+
+function handle_about() {
+    show_about(true);
 }
