@@ -18,6 +18,33 @@ h1,h2,h3,h4,h5,h6 {
 	margin: 2em auto;
 }
 
+/* Tooltips! */
+
+.line-details {
+	padding: 1em;
+	line-height: 1;
+	font-weight: bold;
+	background: black;
+	color: white;
+	border-radius: 0px;
+	border: 2px solid white;
+}
+
+.line-details:after {
+	box-sizing:content-box;
+	display: inline;
+	font-size:10px;
+	width: 100%;
+	line-height: 1;
+	color: white;
+	text-align: center;
+}
+
+
+
+
+
+
 /* Details */
 
 #line-details {
