@@ -2,13 +2,14 @@
 
 
 {% block content %}
+    <div class='line-details'>
+        <h3 class='title'>KLDSJFKLSDJFLK</h3>
+        <p class='description'>lkjlkadjfalskdfjalkdfjaslkdf</p>
+    </div>
+
     <header id='header'>
         <div id='subway-line-labels'></div>
-        {# <div id='line-details'>
-            <h3 class='title'>Please select a MTA line</h3>
-            <p class='description'></p>
-        </div> #}
-    </header>
+            </header>
 	<div id='vis'>
 		<div class='container-fluid'>
             <div class='row'>
@@ -26,6 +27,15 @@
             </div>
         </div>
 	</div>
+    <div id="about_box_bkg" class="hide"></div>
+    <div id="about_box" class="hide">
+        <h2>About</h2>
+       Data was retrieved from <a href=""target="_blank">link</a> 
+        <h2>Credits</h2>
+        <ul>
+        <a href="smth" target="_blank">link</a> 
+        <div id="close_button_top"><a href="#" onclick="show_about(false);">CLOSE</a></div>
+    </div>
 {% endblock %}
 
 
@@ -42,16 +52,16 @@
 	<script src="{{ url_for('static', filename='main.js') }}"></script>
 	<script>
 	// get the label data for each line
-    if (subway_labels){
-    	console.log(subway_labels);
-    	drawSubwayLabels(subway_labels); 
-    };
+    // if (subway_labels){
+    // 	console.log(subway_labels);
+    // 	drawSubwayLabels(subway_labels); 
+    // };
 
-    // draw the map
-    if(map_geojson) {
-    	console.log(map_geojson, stations);
-    	drawMap(map_geojson, stations);
-    }
+    // // draw the map
+    // if(map_geojson) {
+    // 	console.log(map_geojson, stations);
+    // 	drawMap(map_geojson, stations);
+    // }
 
   </script>
 {% endblock %}

@@ -21,6 +21,15 @@ var svgMareys = d3.selectAll('.marey').append('svg').call(responsiveSvg, {width:
 svgMareys.append('g').attr('class', 'station-axis').attr("transform", `translate(0,${margin.top})`);
 svgMareys.append('g').attr('class', 'lines');
 
+
+// create line-details here
+// Define the div for the tooltip
+var mareylinetip = svgMareys.parent().append('div')
+  .attr('class', 'line-details');
+
+mareylinetip.append('div').attr('class', 'title')
+mareylinetip.append('div').attr('class', 'description')
+
 var formatTime = d3.timeFormat("%H:%M");
 var parseTime = d3.timeParse("%H:%M:%S");
 
@@ -112,8 +121,7 @@ iconBar.append('span').attr('class', 'ctl-button subway-line hiding').html('&tim
 		// hide column
 		col.classed('d-none', true);
 	});
-
-
+	
 // // cipping path for lines so they don't show outside of the plot. idk I found it in the marey example
 // svgMareys.append("defs").append("clipPath")
 //     .attr("id", "clip")
@@ -148,19 +156,23 @@ function drawSubwayLabels(subway_lines) {
 			d3.select('#subway-line-labels').selectAll('.subway-line')
 				.filter((d) => d.route_id == station.route_id)
 				.classed('selected', false);
+
 			d3.select(this).classed('selected', true);
 
-			// // display line details
-			// var details = d3.select('#line-details')
+			// display line details
+			var details = d3.select(this).select('.line-details')
 
-			// // display line name
-			// var title = details.select('.title').text(d.route_long_name)
-			// title.append('span').text(' ('+d.route_short_name+')');
-			// title.append('a').attr('class', 'badge badge-pill badge-dark')
-			// 	.attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)');
+			// display line name
+			var title = details.select('.title').text(d.route_long_name)
+			title.append('span').text(' ('+d.route_short_name+')');
+			title.append('a').attr('class', 'badge badge-pill badge-dark')
+				.attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)');
 
-			// // display line description
-			// details.select('.description').text(d.route_desc);
+			// display line description
+			details.select('.description').text(d.route_desc);
+
+
+
 			// set marey plot line label
 			svg.closest('.col').select('.marey-line').text(d.route_id)
 				.style('background-color', d.route_color ? '#'+d.route_color : null)
@@ -489,4 +501,21 @@ function throttle(fn, restPeriod){
 			setTimeout((d) => { free = true; }, restPeriod);
 		}
 	}
+}
+
+// about
+function show_about(visible) {
+    if (visible) {
+        document.getElementById("about_box_bkg").className = "show";
+        document.getElementById("about_box").className = "show";
+        document.getElementById("about_box").style.pointerEvents = "all";
+    } else {
+        document.getElementById("about_box_bkg").className = "hide";
+        document.getElementById("about_box").className = "hide";
+        document.getElementById("about_box").style.pointerEvents = "none";
+    }
+}
+
+function handle_about() {
+    show_about(true);
 }
