@@ -8,22 +8,37 @@ from flask import request, render_template, jsonify, make_response
 app = Flask(__name__)
 
 
-data_dir = 'static/data/GTFS_nyc_Subway/'
+data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/data/GTFS_nyc_Subway/')
 data_file = lambda f: os.path.join(data_dir, f)
 
 def load_map_geojson():
 	# load map data
-	map_data = pd.read_csv(data_file('new_shape.csv')).set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
+	map_data = pd.read_csv(data_file('new_shape.csv'))
+	map_data['train'] = map_data['shape_id'].apply(lambda s: s.split('.')[0])
+	map_data['direction'] = map_data['shape_id'].apply(lambda s: s.split('.')[-1])
+	map_data['route_color'] = map_data['route_color'].fillna('')
+
+	map_data = map_data.set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
+	
+	def get_feature(x):
+		colors = x.route_color.unique()
+		trains = x.train.unique()
+		directions = x.direction.unique()
+		return dict(
+			type='Feature',
+			properties=dict(
+				route_color=colors[0] if len(colors) else '',
+				train=trains[0] if len(trains) else '',
+				direction=directions[0] if len(directions) else '',
+			),
+			geometry=dict(
+				type='LineString',
+				coordinates=x[['shape_pt_lon', 'shape_pt_lat']].values.tolist()
+			)
+		)
 
 	# convert to geojson
-	features = map_data.groupby(level=0).apply(lambda x: dict(
-		type='Feature',
-		properties={},
-		geometry=dict(
-			type='LineString',
-			coordinates=x[['shape_pt_lon', 'shape_pt_lat']].values.tolist()
-		)
-	)).values.tolist()
+	features = map_data.groupby(level=0).apply(get_feature).values.tolist()
 
 	return dict(
 		type='FeatureCollection',
