@@ -273,7 +273,7 @@ function drawMareyDiagram(stations, trips, svg) {
 	station_enter.append("line")
 		.attr("y2", height - margin.top - margin.bottom);
 
-	station.enter.append('rect')
+	station_enter.append('rect')
 		.attr('x', 0).attr('y', 0)
 		.attr('height', height - margin.top - margin.bottom)
 		.attr('width', function(d1){
@@ -437,8 +437,8 @@ function responsiveSvg(el, o){
 }
 
 
-function lineColor(d, def) {
-	return line_colors[d.properties.train] ? '#' + line_colors[d.properties.train] : (def || 'black');
+function lineColor(line, def) {
+	return line_colors[line] ? '#' + line_colors[line] : (def || 'black');
 }
 
 function updateMapColors(){
@@ -455,7 +455,7 @@ function updateMapColors(){
 		.style('opacity', (d) => is_focused(d) ? 1 : 0.2);
 
 	map_lines.transition().duration(300)
-		.attr('stroke', function(d) { return lineColor(d); })
+		.attr('stroke', function(d) { return lineColor(d.properties.train); })
 		.attr('stroke-width', (d) => show_all ? '3' : (is_focused(d) ? '6' : '2' ))
 		.style('opacity', (d) => is_focused(d) ? 1 : 0.1);
 
