@@ -272,7 +272,7 @@ function drawMareyDiagram(stations, trips, svg) {
 	// train.append("path")
 	//   .attr("d", function(d) { return line(d.stops); });
 
-	draw lines
+	// draw lines
 	var line = d3.line()
 		.x(function(d,i) {return x(d.distance);})
 		.y(function(d) {return y(d.time);})
