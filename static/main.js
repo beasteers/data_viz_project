@@ -25,7 +25,7 @@ svgMareys.append('g').attr('class', 'lines');
 // create line-details here
 // Define the div for the tooltip
 var mareylinetip = d3.select("body").append('div')
-  .attr('class', 'line-details');
+  .attr('class', 'line-details').classed('d3-tooltip', true);
 
 var stationtip = d3.select("body").append('div')
 	.attr('class', 'stationlinetip')
@@ -284,12 +284,17 @@ function drawMareyDiagram(stations, trips, svg) {
 		.attr("y2", height - margin.top - margin.bottom);
 
 	station_enter.append('rect')
-		.attr('x', 0).attr('y', 0)
+		.attr('x', 0).attr('y', 0).style('pointer-events', 'all')
 		.attr('height', height - margin.top - margin.bottom)
-		.attr('width', function(d1){
-			var d2 = d3.select(this.nextElementSibling).datum();
+		.attr('width', function(){
+			var me = d3.select(this.parentNode);
+			var next = d3.select(this.parentNode.nextElementSibling);
+			if(next.empty()) return;
+			var d1 = me.datum();
+			var d2 = next.datum();
 			if(!d2) return;
-			return y(d2.distance) - y(d1.distance);
+			console.log(d2.distance, d1.distance, x(d2.distance), x(d1.distance), x(d2.distance) - x(d1.distance))
+			return x(d2.distance) - x(d1.distance);
 		})
 
 	station.exit().remove();
@@ -358,7 +363,8 @@ function drawMap(geojson, stations, line) {
 	  .attr('stroke', (d) => d.properties.route_color ? '#'+d.properties.route_color : '#666')
 	  .attr('d', path)
 	  .on('click', function(d){
-	  	d3.select('#subway-line-labels').filter((a) => a.route_id == d.route_id).on('click')();
+	  	d3.selectAll('#subway-line-labels .subway-line')
+	  		.filter((a) => a.properties.route_id == d.properties.route_id).on('click')();
 	  })
 	  // add a tooltip
 	  .call(bindTooltip, lineTooltip)
@@ -385,7 +391,9 @@ function drawMap(geojson, stations, line) {
 		stationtip.select('.stopname').text(data.properties.stop_name)
 
 		var transfer = stationtip.select('.subway-lines').selectAll('.lines').data(data.properties.lines)
-		transfer.enter().append('div').attr('class', 'lines subway-line').text((d) => d)
+		transfer.enter().append('div').attr('class', 'lines subway-line')
+			.text((d) => d)
+			.style('background-color', (d) => lineColor(d))
 		transfer.exit().remove()
 
 		d3.selectAll('.marey .station')
