@@ -71,10 +71,13 @@ h1,h2,h3,h4,h5,h6 {
 	margin: 0 auto;
 }
 
+#vis #map .sticky-top {
+	top: 1em;
+}
+
 #vis svg {
 	/*background: #f6f6f6;*/
 	border: 2px solid #eee;
-	margin: 1em 0;
 	overflow: visible;
 	display: block;
 }
@@ -88,6 +91,7 @@ h1,h2,h3,h4,h5,h6 {
 	position: absolute !important;
 	top: 0;
 	right: 0;
+	transform: translate(0,-50%);
 }
 
 #vis .diagram-icons > span {
@@ -116,7 +120,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .station text {
-	font-size: 10px;
+	font-size: 17px;
 	transition: stroke 0.2s ease-in-out;
 }
 
@@ -126,6 +130,11 @@ h1,h2,h3,h4,h5,h6 {
 .station:hover .station-label {
 	opacity: 1;
 }
+
+.station.hidden .station-label {
+	opacity: 0;
+}
+
 
 .station line {
 	stroke: #333;
