@@ -337,6 +337,7 @@ function drawMap(geojson, stations, line) {
 	var path = d3.geoPath().projection(projection)
 		.pointRadius(2);
 
+
 	// draw trips
 	var lines = svgMapLines.datum(geojson || svgMapLines.datum()).selectAll('.line')
 	  	.data((d) => d.features);
@@ -345,12 +346,15 @@ function drawMap(geojson, stations, line) {
 	  .append('path').attr('class', 'line')
 	  .attr('stroke', (d) => d.properties.route_color ? '#'+d.properties.route_color : '#666')
 	  .attr('d', path)
+	  .on('click', function(d){
+	  	d3.select('#subway-line-labels').filter((a) => a.route_id == d.route_id).on('click')();
+	  })
 	  // add a tooltip
 	  .call(bindTooltip, lineTooltip)
-	  .on('mouseover.modify_tooltip', function(d) {
+	  .on('mouseover', function(d) {
 	  	lineTooltip.text(d.properties.train)
 	  		.style('background-color', d.properties.route_color ? '#'+d.properties.route_color : '#666');
-	  })
+	  });
 
 	lines
 		.attr('d', path);
@@ -463,9 +467,9 @@ function updateMapColors(){
 
 function bindTooltip(el, tooltip, o) {
 	o = Object.assign({
-		left: (box) => - box.width / 2,
-		top: (box) =>  - box.height - 8,
-		updateOn: 'mousemove'
+		left: (box) => - box.width / 2, // distance from left
+		top: (box) =>  - box.height - 8, // distance from top
+		updateOn: 'mousemove' // or mouseover
 	}, o);
 
 	tooltip.classed('d3-tooltip', true);
