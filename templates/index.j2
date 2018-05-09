@@ -4,13 +4,11 @@
 {% block content %}
 
     <header id='header'>
+
         <div id='menu'></div>
-        <div id='subway-line-labels'></div>
-        {# <div id='line-details'>
-            <h3 class='title'>Please select a MTA line</h3>
-            <p class='description'></p>
-        </div> #}
+        <div id='subway-line-labels' class='subway-lines'></div>
     </header>
+
 	<div id='vis'>
 		<div class='container-fluid'>
             <div class='row'>
@@ -28,6 +26,7 @@
             </div>
         </div>
 	</div>
+
     <div id="about_box_bkg">
         <div id="about_box">
             <h2>About</h2>
@@ -65,6 +64,7 @@
     	console.log(map_geojson, stations);
     	drawMap(map_geojson, stations);
     }
+
 
   </script>
 {% endblock %}

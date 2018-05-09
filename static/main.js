@@ -37,8 +37,13 @@ svgMareys.append('g').attr('class', 'lines');
 
 // create line-details here
 // Define the div for the tooltip
-var mareylinetip = svgMareys.parent().append('div')
+var mareylinetip = d3.select("body").append('div')
   .attr('class', 'line-details');
+
+var stationtip = d3.select("body").append('div')
+	.attr('class', 'stationlinetip')
+stationtip.append('div').attr('class','stopname')
+stationtip.append('div').attr('class','subway-lines')
 
 mareylinetip.append('div').attr('class', 'title')
 mareylinetip.append('div').attr('class', 'description')
@@ -172,17 +177,18 @@ function drawSubwayLabels(subway_lines) {
 
 			d3.select(this).classed('selected', true);
 
-			// display line details
-			var details = d3.select(this).select('.line-details')
 
 			// display line name
-			var title = details.select('.title').text(d.route_long_name)
+			var title = mareylinetip.select('.title').text(d.route_long_name)
 			title.append('span').text(' ('+d.route_short_name+')');
 			title.append('a').attr('class', 'badge badge-pill badge-dark')
-				.attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)');
+				// .attr('href', d.route_url).attr('target', '_blank').text('Timetable (pdf)')
+				;
 
 			// display line description
-			details.select('.description').text(d.route_desc);
+			mareylinetip.select('.description').text(d.route_desc);
+
+
 
 
 
@@ -190,6 +196,10 @@ function drawSubwayLabels(subway_lines) {
 			svg.closest('.col').select('.marey-line').text(d.route_id)
 				.style('background-color', d.route_color ? '#'+d.route_color : null)
 				.style('color', d.route_text_color ? '#'+d.route_text_color : null)
+				.call(bindTooltip, mareylinetip, {
+					top: (b) => 5,
+					left: (b) => -b.width
+				})
 
 
 			// draw graph
@@ -286,7 +296,7 @@ function drawMareyDiagram(stations, trips, svg) {
 	station_enter.append("line")
 		.attr("y2", height - margin.top - margin.bottom);
 
-	station.enter.append('rect')
+	station_enter.append('rect')
 		.attr('x', 0).attr('y', 0)
 		.attr('height', height - margin.top - margin.bottom)
 		.attr('width', function(d1){
@@ -351,6 +361,7 @@ function drawMap(geojson, stations, line) {
 	var path = d3.geoPath().projection(projection)
 		.pointRadius(2);
 
+
 	// draw trips
 	var lines = svgMapLines.datum(geojson || svgMapLines.datum()).selectAll('.line')
 	  	.data((d) => d.features);
@@ -359,12 +370,15 @@ function drawMap(geojson, stations, line) {
 	  .append('path').attr('class', 'line')
 	  .attr('stroke', (d) => d.properties.route_color ? '#'+d.properties.route_color : '#666')
 	  .attr('d', path)
+	  .on('click', function(d){
+	  	d3.select('#subway-line-labels').filter((a) => a.route_id == d.route_id).on('click')();
+	  })
 	  // add a tooltip
 	  .call(bindTooltip, lineTooltip)
-	  .on('mouseover.modify_tooltip', function(d) {
+	  .on('mouseover', function(d) {
 	  	lineTooltip.text(d.properties.train)
 	  		.style('background-color', d.properties.route_color ? '#'+d.properties.route_color : '#666');
-	  })
+	  });
 
 	lines
 		.attr('d', path);
@@ -375,14 +389,20 @@ function drawMap(geojson, stations, line) {
   stationPoints.data(stations.features || stationPoints.data())
 	.enter().append("path").attr('class', 'map-station')
 	.attr("r", "5px")
-	.attr('d', path)
+	.attr('d', path).call(bindTooltip, stationtip)
 	.on('mouseover', function(data){
 		d3.select(this).classed('hover', true).moveToFront()
 			.transition().duration(300)
 			.attr('r', '8px');
 
+		stationtip.select('.stopname').text(data.properties.stop_name)
+
+		var transfer = stationtip.select('.subway-lines').selectAll('.lines').data(data.properties.lines)
+		transfer.enter().append('div').attr('class', 'lines subway-line').text((d) => d)
+		transfer.exit().remove()
+
 		d3.selectAll('.marey .station')
-			.filter(function(d){return d.stop_name == data.stop_name; })
+			.filter(function(d){return d.properties.stop_name == data.properties.stop_name; })
 			.classed('hover', true);
 	})
 	.on('mouseout', function(){
@@ -446,8 +466,8 @@ function responsiveSvg(el, o){
 }
 
 
-function lineColor(d, def) {
-	return line_colors[d.properties.train] ? '#' + line_colors[d.properties.train] : (def || 'black');
+function lineColor(line, def) {
+	return line_colors[line] ? '#' + line_colors[line] : (def || 'black');
 }
 
 function updateMapColors(){
@@ -464,7 +484,7 @@ function updateMapColors(){
 		.style('opacity', (d) => is_focused(d) ? 1 : 0.2);
 
 	map_lines.transition().duration(300)
-		.attr('stroke', function(d) { return lineColor(d); })
+		.attr('stroke', function(d) { return lineColor(d.properties.train); })
 		.attr('stroke-width', (d) => show_all ? '3' : (is_focused(d) ? '6' : '2' ))
 		.style('opacity', (d) => is_focused(d) ? 1 : 0.1);
 
@@ -477,9 +497,9 @@ function updateMapColors(){
 
 function bindTooltip(el, tooltip, o) {
 	o = Object.assign({
-		left: (box) => - box.width / 2,
-		top: (box) =>  - box.height - 8,
-		updateOn: 'mousemove'
+		left: (box) => - box.width / 2, // distance from left
+		top: (box) =>  - box.height - 8, // distance from top
+		updateOn: 'mousemove' // or mouseover
 	}, o);
 
 	tooltip.classed('d3-tooltip', true);
