@@ -20,6 +20,34 @@ h1,h2,h3,h4,h5,h6 {
 
 /* Tooltips! */
 
+.stationlinetip {
+	padding: 1em;
+	line-height: 1;
+	font-weight: bold;
+	background: black;
+	color: white;
+	border-radius: 0px;
+	border: 2px solid white;
+	left: 300px;
+	width: 200px;
+	top:146px;
+}
+
+.subway-lines {
+	padding: 1em;
+	line-height: 1;
+	font-weight: bold;
+	background: black;
+	color: white;
+	border-radius: 0px;
+	border: 2px solid white;
+	left: 300px;
+	width: 200px;
+	top:146px;
+}
+
+
+
 .line-details {
 	padding: 1em;
 	line-height: 1;
@@ -42,10 +70,6 @@ h1,h2,h3,h4,h5,h6 {
 	color: white;
 	text-align: center;
 }
-
-
-
-
 
 
 /* Details */

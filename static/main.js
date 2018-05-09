@@ -27,6 +27,11 @@ svgMareys.append('g').attr('class', 'lines');
 var mareylinetip = d3.select("body").append('div')
   .attr('class', 'line-details');
 
+var stationtip = d3.select("body").append('div')
+	.attr('class', 'stationlinetip')
+stationtip.append('div').attr('class','stopname')
+stationtip.append('div').attr('class','subway-lines')
+
 mareylinetip.append('div').attr('class', 'title')
 mareylinetip.append('div').attr('class', 'description')
 
@@ -169,6 +174,8 @@ function drawSubwayLabels(subway_lines) {
 
 			// display line description
 			mareylinetip.select('.description').text(d.route_desc);
+
+
 
 
 
@@ -369,14 +376,20 @@ function drawMap(geojson, stations, line) {
   stationPoints.data(stations.features || stationPoints.data())
 	.enter().append("path").attr('class', 'map-station')
 	.attr("r", "5px")
-	.attr('d', path)
+	.attr('d', path).call(bindTooltip, stationtip)
 	.on('mouseover', function(data){
 		d3.select(this).classed('hover', true).moveToFront()
 			.transition().duration(300)
 			.attr('r', '8px');
 
+		stationtip.select('.stopname').text(data.properties.stop_name)
+
+		var transfer = stationtip.select('.subway-lines').selectAll('.lines').data(data.properties.lines)
+		transfer.enter().append('div').attr('class', 'lines subway-line').text((d) => d)
+		transfer.exit().remove()
+
 		d3.selectAll('.marey .station')
-			.filter(function(d){return d.stop_name == data.stop_name; })
+			.filter(function(d){return d.properties.stop_name == data.properties.stop_name; })
 			.classed('hover', true);
 	})
 	.on('mouseout', function(){
