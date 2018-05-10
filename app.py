@@ -17,6 +17,7 @@ def load_map_geojson():
 	map_data['train'] = map_data['shape_id'].apply(lambda s: s.split('.')[0])
 	map_data['direction'] = map_data['shape_id'].apply(lambda s: s.split('.')[-1])
 	map_data['route_color'] = map_data['route_color'].fillna('')
+	map_data = map_data[map_data.train.isin(stations_with_data)]
 
 	map_data = map_data.set_index(['shape_id', 'shape_pt_sequence']).drop('shape_dist_traveled', 1).dropna()
 	
@@ -48,7 +49,9 @@ def load_map_geojson():
 
 def load_stop_times():
 	# load stop data
-	return pd.read_csv(data_file('stops_and_times.csv')).set_index('train') # , 'arrival_time'
+	df = pd.read_csv(data_file('stops_and_times.csv')).set_index('train') # , 'arrival_time'
+	df.index = df.index.map(str)
+	return df
 
 
 def dist_from_coordinates(pt1, pt2):
@@ -65,11 +68,14 @@ def dist_from_coordinates(pt1, pt2):
 
 def load_stations():
 	# load information about stations
-	df = pd.read_pickle(data_file('stop_train.pkl')).set_index(['train', 'stop_sequence']).sort_index()
-	return df
+	df = pd.read_pickle(data_file('stop_train.pkl'))
+	df = df[df.train.isin(stations_with_data)]
+	return df.set_index(['train', 'stop_sequence']).sort_index()
 
 def load_subway_labels():
-	return pd.read_csv(data_file('routes.txt'))
+	df = pd.read_csv(data_file('routes.txt'))
+	df = df[df.route_id.isin(stations_with_data)]
+	return df
 
 def get_station_geojson(stations):
 	# convert to geojson
@@ -96,9 +102,10 @@ def get_distances_for_line(line):
 	return df
 
 
+stop_times = load_stop_times() # loads the data for the individual train trips
+stations_with_data = np.unique(stop_times.index)
 
 map_geojson = load_map_geojson() # loads line data for mapping
-stop_times = load_stop_times() # loads the data for the individual train trips
 stations = load_stations() # for getting station axis data
 station_geojson = get_station_geojson(stations) # for drawing station points on map
 subway_labels = load_subway_labels() # load the data for each individual subway line

@@ -53,7 +53,7 @@ var formatTime = d3.timeFormat("%H:%M");
 var parseTime = d3.timeParse("%H:%M:%S");
 
 
-var mareys = svgMareys.nodes();
+var mareys = svgMareys.nodes().reverse();
 function oldestMarey(){
 	/* keep track of the order of marey diagrams 
 		mareys is a list of svg nodes ordered by how recent it was used, in descending order
