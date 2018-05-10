@@ -19,12 +19,10 @@ menu.append('a')
 	.text('About&Credits')
 	.on('click', function(){
 		show_about(true);
-	})
-	;
+	});
 
 function show_about(visible) {
 	d3.select('#about_box_bkg').classed('visible', visible);
-	// d3.select('#about_box').classed('visible', visible);
 }
 
 // create responsive svg for moray plots and map
@@ -33,6 +31,9 @@ var svgMareys = d3.selectAll('.marey').append('svg').call(responsiveSvg, {width:
 
 svgMareys.append('g').attr('class', 'station-axis').attr("transform", `translate(0,${margin.top})`);
 svgMareys.append('g').attr('class', 'lines');
+svgMareys.append("g")
+	  .attr("class", "y left axis")
+	  .attr('transform', `translate(${margin.left},0)`);
 
 
 // create line-details here
@@ -86,6 +87,15 @@ var yAxis = d3.axisLeft()
     .scale(y)
     .ticks(24)
     .tickFormat(formatTime);
+
+
+var nLoadingCircles = 5;
+var loaders = d3.selectAll('.marey').append('div')
+	.attr('class', 'loader');
+
+loaders.append('div').attr('class', 'subway-lines').selectAll('.subway-line')
+	.data((new Array(nLoadingCircles)).fill(0)).enter()
+	.append('div').attr('class', 'subway-line');
 
 
 var iconBar = d3.selectAll('.marey').append('div').attr('class', 'diagram-icons');
@@ -159,7 +169,7 @@ function drawSubwayLabels(subway_lines) {
 		.style('color', (d) => d.route_text_color ? '#'+d.route_text_color : null)
 		.text(d => d.route_id)
 		.on('click', function(d) {
-
+			console.log(d);
 			var svg = svgMareys.filter((s) => s && s.route_id == d.route_id);
 			//preventing train duplicating
 			if (!svg.empty()){
@@ -209,16 +219,29 @@ function drawSubwayLabels(subway_lines) {
 }
 
 function loadMareyDiagram(line, svg) {
+
+		var container = d3.select(svg.node().parentNode).classed('d-none', false);
+		var loader = container.select('.loader')
+
+		loader
+			.transition().duration(600)
+			.style('opacity', 1);
+
+		loader.selectAll('.subway-line')
+			.text(line.route_id).classed('black', !line_colors[line.route_id])
+			.style('opacity', (d, i) => 1./(i+1))
+			.style('background-color', lineColor(line.route_id));
+
 		d3.json(`/data/trips/${line.route_id}`, function(err, d){
+			loader = container.select('.loader')
+				.transition().duration(600)
+				.style('opacity', 0);
 			drawMareyDiagram(d.stations, d.trips, svg);
 		});
 }
 
 function drawMareyDiagram(stations, trips, svg) {
 	x.domain(d3.extent(stations, (d) => d.distance));
-
-	// come out of hiding
-	d3.select(svg.node().parentNode).classed('d-none', false);
 
 	// select map stations
 	updateMapColors();
@@ -306,16 +329,12 @@ function drawMareyDiagram(stations, trips, svg) {
 			var d1 = me.datum();
 			var d2 = next.datum();
 			if(!d2) return;
-			console.log(d2.distance, d1.distance, x(d2.distance), x(d1.distance), x(d2.distance) - x(d1.distance))
 			return x(d2.distance) - x(d1.distance);
 		})
 
 	station.exit().remove();
 
-	svg.append("g")
-	  .attr("class", "y left axis")
-	  .attr('transform', `translate(${margin.left},0)`)
-	  .call(yAxis);
+	svg.select('.y.axis').call(yAxis);
 
 
 	//draw lines
@@ -376,8 +395,10 @@ function drawMap(geojson, stations, line) {
 	  .attr('stroke', (d) => d.properties.route_color ? '#'+d.properties.route_color : '#666')
 	  .attr('d', path)
 	  .on('click', function(d){
-	  	d3.selectAll('#subway-line-labels .subway-line')
-	  		.filter((a) => a.properties.route_id == d.properties.route_id).on('click')();
+	  	var subway_line = d3.selectAll('#subway-line-labels .subway-line')
+	  		.filter((a) => a.route_id == d.properties.train)
+
+	  	subway_line.on('click').apply(subway_line.node(), [subway_line.datum()]);
 	  })
 	  // add a tooltip
 	  .call(bindTooltip, lineTooltip)
@@ -410,7 +431,7 @@ function drawMap(geojson, stations, line) {
 		transfer.exit().remove()
 
 		d3.selectAll('.marey .station')
-			.filter(function(d){return d.properties.stop_name == data.properties.stop_name; })
+			.filter(function(d){return d.stop_name == data.properties.stop_name; })
 			.classed('hover', true);
 	})
 	.on('mouseout', function(){

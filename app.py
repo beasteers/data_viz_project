@@ -102,7 +102,7 @@ stop_times = load_stop_times() # loads the data for the individual train trips
 stations = load_stations() # for getting station axis data
 station_geojson = get_station_geojson(stations) # for drawing station points on map
 subway_labels = load_subway_labels() # load the data for each individual subway line
-line_colors = subway_labels.set_index('route_id')['route_color'].fillna('black') # get a mapping of line -> color
+line_colors = subway_labels.set_index('route_id')['route_color'].fillna('') # get a mapping of line -> color
 
 
 

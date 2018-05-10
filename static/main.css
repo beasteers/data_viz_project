@@ -13,9 +13,29 @@ h1,h2,h3,h4,h5,h6 {
 	font-weight: bold;
 }
 
+a {
+	color: yellow;
+}
+
+a:hover {
+	text-decoration: none;
+	color: red;
+}
+
 #header {
 	max-width: 1000px;
-	margin: 2em auto;
+	margin: 0em auto 2em;
+}
+
+#menu {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0.6em;
+	font-size: 0.7em;
+}
+#menu a {
+	cursor: pointer;
+	color: white;
 }
 
 /* Tooltips! */
@@ -279,12 +299,13 @@ h1,h2,h3,h4,h5,h6 {
     top: 0;
     overflow: hidden;
     z-index: 1900;
-    background-color: rgba(100,100,100,0.6);
+    background-color: rgba(0,0,0,0.6);
     pointer-events: none;
     display: none;
 }
 
 #about_box {
+	position: relative;
     width: 600px;
     height: 200px;
     margin: 4em auto;
@@ -294,14 +315,13 @@ h1,h2,h3,h4,h5,h6 {
     text-align: justify;
     font-size: 0.9em;
     z-index: 2000;
-    background-color: rgba(100,100,100,0.7);
-    border-radius: 10px;
-    border: black 2px solid;
-    display: none;
+    background-color: rgba(0,0,0,0.7);
+    /*border-radius: 10px;*/
+    border: white 2px solid;
 }
 
-#about_box.visible,
 #about_box_bkg.visible {
+	display: block;
 	pointer-events: all;
 }
 
@@ -311,6 +331,8 @@ h1,h2,h3,h4,h5,h6 {
     top: 8px;
     overflow: hidden;
 }
+
+
 /* Tooltip - general */
 
 .d3-tooltip {
@@ -325,8 +347,70 @@ h1,h2,h3,h4,h5,h6 {
 	display: block;
 }
 
+/* Loader */
+.loader {
+	position: absolute;
+	top: 3px;
+	left: 18px;
+	right: 18px;
+	bottom: 3px;
+	text-align: center;
+	opacity: 0;
+	pointer-events: none;
+	background: black;
+}
+
+.loader .subway-lines {
+	width: 250px;
+	margin: 8em auto;
+}
+
+.loader .subway-line {
+	animation-name: loader;
+	animation-timing-function: ease-in-out;
+	animation-duration: 3s;
+	animation-iteration-count: infinite;
+	position: absolute;
+}
+
+.loader .subway-line:not(.black) {
+	border: none;
+}
 
 
+@keyframes loader {
+  15% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(230px);
+  }
+  65% {
+    transform: translateX(230px);
+  }
+  95% {
+    transform: translateX(0);
+  }
+}
+
+.loader .subway-line:first-child {
+  animation-delay: 0s;
+}
+.loader .subway-line:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.loader .subway-line:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.loader .subway-line:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.loader .subway-line:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.loader .subway-line:nth-child(6) {
+  animation-delay: 0.5s;
+}
 
 
 
