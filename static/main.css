@@ -307,7 +307,7 @@ a:hover {
 #about_box {
 	position: relative;
     max-width: 600px;
-    max-height: 400px;
+    max-height: 600px;
     margin: 4em auto;
     overflow: hidden;
     padding: 18px;
