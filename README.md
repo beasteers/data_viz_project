@@ -1,5 +1,5 @@
 # Visually Exploring NYC Subway Journeys
-CUSP Data Visualization Project (Group 7) [Demo](http://subways.pythonanywhere.com/)
+CUSP Data Visualization Project (Group 7) [Demo](http://subways.pythonanywhere.com/) Will only be functioning for a few months.
 
 **Authors**: Assel Dmitriyeva, Rachel Xin Rong Lim, Ben Steers
 
